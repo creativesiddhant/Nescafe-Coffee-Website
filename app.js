@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inertial Smooth Scrolling (Lerp) variables
     let targetFrame = 0;
     let currentFrame = 0;
+    let lastDrawnIndex = -1;
     const lerpFactor = 0.085; // Controls frame sliding smoothness (lower is slower/smoother)
     
     // 1. PRELOAD ALL FRAMES TO CACHE IN MEMORY
@@ -65,10 +66,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. INITIALIZE ANIMATION CANVAS AND REGISTER EVENTS
     function startApp() {
         preloader.classList.add('fade-out');
+
+        // Initialize Lenis Smooth Scroll with ultra-premium physics
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Organic Out-Expo easing curve
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+            syncTouch: true,         // Synchronize mobile drag inputs
+            touchMultiplier: 1.8,    // Elegant, responsive speed multiplier
+            syncTouchLerp: 0.08,     // Fluid touch scrolling momentum
+        });
+        window.lenis = lenis;
         
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('scroll', onScroll);
+        
+        // Route Lenis scroll events to standard scroll calculations
+        lenis.on('scroll', onScroll);
         
         // Initial drawing of frame index 0
         drawFrame(0);
@@ -88,24 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.fade-in-up').forEach((el) => {
             fadeInUpObserver.observe(el);
         });
-        
-        // Initialize Sticky CTA scroll visibility toggle
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                stickyCta.classList.add('visible');
-            } else {
-                stickyCta.classList.remove('visible');
-            }
-        });
 
-        // Mobile menu toggle functionality
+        // Mobile menu toggle functionality with Lenis integration (stops scroll leakage)
         function toggleMobileMenu(isOpen) {
             if (isOpen) {
                 mobileMenu.classList.remove('translate-x-full');
                 mobileMenu.classList.remove('pointer-events-none');
+                window.lenis?.stop(); // Prevent background scrolling
             } else {
                 mobileMenu.classList.add('translate-x-full');
                 mobileMenu.classList.add('pointer-events-none');
+                window.lenis?.start(); // Resume background scrolling
             }
         }
         window.toggleMobileMenu = toggleMobileMenu;
@@ -118,20 +127,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // 3. RETINA-READY ASPECT-FIT COVER SCALING
+    // 3. RETINA-READY ASPECT-FIT COVER SCALING (OPTIMIZED)
     function resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
+        // Clamp DPR to max 2.0 to avoid mobile battery drain / rendering bottleneck
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = window.innerWidth * dpr;
         canvas.height = window.innerHeight * dpr;
         
         canvas.style.width = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
         
+        // Reset lastDrawnIndex to force redraw on resized dimension space
+        lastDrawnIndex = -1;
+        
         // Redraw immediately on window resize
         drawFrame(Math.round(currentFrame));
     }
     
+    // Optimized: skips duplicate draws, saving substantial GPU workload
     function drawFrame(index) {
+        if (index === lastDrawnIndex) return;
+        
         const img = images[index];
         if (!img || !img.complete) return;
         
@@ -160,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.imageSmoothingQuality = 'high';
         
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
+        lastDrawnIndex = index;
     }
     
     // 4. SCROLL INTERCEPTOR (CALCULATES FRAME TARGET STRICTLY WITHIN THE SPACER REGION)
@@ -215,10 +232,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainHeader.classList.remove('shadow-lg');
             }
         }
+
+        // Toggle Sticky CTA visibility
+        if (stickyCta) {
+            if (scrollTop > 500) {
+                stickyCta.classList.add('visible');
+            } else {
+                stickyCta.classList.remove('visible');
+            }
+        }
     }
     
-    // 5. SMOOTH INTERPOLATION (LERPING) RENDER LOOP
-    function renderLoop() {
+    // 5. SMOOTH INTERPOLATION (LERPING) RENDER LOOP WITH UNIFIED RAF TICK
+    function renderLoop(time) {
+        // Sync Lenis scroll tick to exactly same browser frame
+        if (window.lenis) {
+            window.lenis.raf(time);
+        }
+
         const frameDiff = targetFrame - currentFrame;
         
         // If there's scroll movement lag, lerp currentFrame towards targetFrame
