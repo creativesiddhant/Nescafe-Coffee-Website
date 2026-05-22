@@ -133,22 +133,36 @@
 <body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
 <!-- TopNavBar -->
 <header class="bg-surface/60 backdrop-blur-xl sticky top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full">
-<div class="font-headline-sm text-headline-sm tracking-[0.2em] text-tertiary dark:text-tertiary-fixed cursor-pointer">
+<div class="font-headline-sm text-lg md:text-headline-sm tracking-[0.2em] text-tertiary dark:text-tertiary-fixed cursor-pointer">
             ARTISAN ROAST
         </div>
-<nav class="hidden md:flex gap-8">
+<nav class="hidden lg:flex gap-8">
 <a class="font-body-md text-body-md text-tertiary border-b border-tertiary pb-1 hover:opacity-80 transition-opacity" href="#">The Beans</a>
 <a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Our Craft</a>
 <a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Lounge</a>
 <a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Brew Guides</a>
 </nav>
-<button class="hidden md:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-colors border border-transparent hover:border-white/20">
+<button class="hidden lg:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-colors border border-transparent hover:border-white/20">
             Reserve Now
         </button>
-<button class="md:hidden text-tertiary">
+<button class="lg:hidden text-tertiary hover:opacity-80 transition-opacity" id="mobile-menu-btn">
 <span class="material-symbols-outlined text-3xl">menu</span>
 </button>
 </header>
+
+<!-- Mobile Drawer Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-50 bg-[#120d0b]/95 backdrop-blur-2xl translate-x-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 pointer-events-none">
+<button class="absolute top-6 right-6 text-tertiary hover:opacity-85 transition-opacity" id="mobile-menu-close">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+<a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false);">The Beans</a>
+<a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false);">Our Craft</a>
+<a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false);">Lounge</a>
+<a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false);">Brew Guides</a>
+<button class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 mt-4 border border-transparent hover:border-white/20" onclick="toggleMobileMenu(false);">
+            Reserve Now
+        </button>
+</div>
 <!-- 1. Hero Section -->
 <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
 <div class="absolute inset-0 z-0 bg-surface">
@@ -175,27 +189,27 @@
 </div>
 </section>
 <!-- 2. Awaken Your Energy Section -->
-<section class="py-section-gap bg-surface-container-lowest px-margin-mobile md:px-margin-desktop flex items-center justify-center text-center">
+<section class="py-16 md:py-24 lg:py-section-gap bg-surface-container-lowest px-margin-mobile md:px-margin-desktop flex items-center justify-center text-center">
 <div class="max-w-4xl mx-auto fade-in-up">
-<h2 class="font-headline-md text-headline-md text-on-background leading-relaxed">
+<h2 class="font-headline-md text-3xl md:text-4xl lg:text-headline-md text-on-background leading-relaxed">
                 "Beyond Caffeine. <br/><span class="text-tertiary">It's the Art of the Pour.</span>"
             </h2>
 <div class="w-16 h-[1px] bg-tertiary mx-auto mt-8"></div>
 </div>
 </section>
 <!-- 3. Product Variants -->
-<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background relative">
+<section class="py-16 md:py-24 lg:py-section-gap px-margin-mobile md:px-margin-desktop bg-background relative overflow-hidden">
 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C68642]/5 rounded-full blur-[100px] pointer-events-none"></div>
 <div class="max-w-container-max mx-auto">
 <div class="flex justify-between items-end mb-16 fade-in-up">
-<h3 class="font-headline-md text-headline-md text-on-background">The Collection</h3>
+<h3 class="font-headline-md text-3xl md:text-4xl lg:text-headline-md text-on-background">The Collection</h3>
 <a class="hidden md:flex items-center text-tertiary font-label-caps text-label-caps hover:opacity-80 transition-opacity" href="#">
                     VIEW ALL <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
 </a>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
 <!-- Card 1 -->
-<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.1s;">
+<div class="glass-panel gold-border rounded-xl p-6 lg:p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.1s;">
 <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: COLOMBIA</div>
 <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden group">
 <img src="assets/classic_reserve.png" alt="Classic Reserve Colombian Coffee Beans and Powder" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal"/>
@@ -209,7 +223,7 @@
 <button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
 </div>
 <!-- Card 2 -->
-<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.2s;">
+<div class="glass-panel gold-border rounded-xl p-6 lg:p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.2s;">
 <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: ETHIOPIA</div>
 <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden group">
 <img src="assets/midnight_roast.png" alt="Dark Midnight Roast Steaming Cup" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal"/>
@@ -223,7 +237,7 @@
 <button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
 </div>
 <!-- Card 3 -->
-<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.3s;">
+<div class="glass-panel gold-border rounded-xl p-6 lg:p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up group" style="transition-delay: 0.3s;">
 <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">BLEND: SIGNATURE</div>
 <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden group">
 <img src="assets/gold_standard.png" alt="Gold Standard Espresso Pouring" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal"/>
@@ -240,11 +254,11 @@
 </div>
 </section>
 <!-- 4. Ingredients/Aroma Section -->
-<section class="py-section-gap bg-surface-container border-y border-outline-variant/10 relative overflow-hidden">
-<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<section class="py-16 md:py-24 lg:py-section-gap bg-surface-container border-y border-outline-variant/10 relative overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 <div class="order-2 lg:order-1 fade-in-up">
 <div class="font-label-caps text-label-caps text-tertiary mb-4 tracking-[0.2em]">THE ALCHEMY</div>
-<h2 class="font-headline-md text-headline-md text-on-background mb-6">Sustainably Sourced, Surgically Roasted.</h2>
+<h2 class="font-headline-md text-3xl md:text-4xl lg:text-headline-md text-on-background mb-6">Sustainably Sourced, Surgically Roasted.</h2>
 <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
                     We approach coffee as a science and an art. Every bean is tracked from high-altitude estates to our glowing roasters. The result is a cup of profound clarity and devastatingly rich texture.
                 </p>
@@ -263,14 +277,14 @@
 </li>
 </ul>
 </div>
-<div class="order-1 lg:order-2 h-[500px] md:h-[700px] relative rounded-xl overflow-hidden glass-panel fade-in-up group">
+<div class="order-1 lg:order-2 h-64 sm:h-96 md:h-[500px] lg:h-[600px] relative rounded-xl overflow-hidden glass-panel fade-in-up group">
 <img alt="Fresh premium coffee powder with rising aroma." class="absolute inset-0 w-full h-full object-cover mix-blend-luminosity group-hover:mix-blend-normal opacity-85 transition-transform duration-1000 group-hover:scale-105" src="assets/coffee_alchemy.png"/>
 <div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
 </div>
 </div>
 </section>
 <!-- Footer -->
-<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-section-gap border-t border-outline-variant/20">
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-12 md:py-16 border-t border-outline-variant/20">
 <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter">
 <div class="font-headline-sm text-headline-sm text-tertiary mb-6 md:mb-0 text-center md:text-left">
                 ARTISAN ROAST
@@ -317,6 +331,29 @@
                     stickyCta.classList.remove('visible');
                 }
             });
+
+            // Mobile menu toggle functionality
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+            function toggleMobileMenu(isOpen) {
+                if (isOpen) {
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.remove('pointer-events-none');
+                } else {
+                    mobileMenu.classList.add('translate-x-full');
+                    mobileMenu.classList.add('pointer-events-none');
+                }
+            }
+            window.toggleMobileMenu = toggleMobileMenu;
+
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(true));
+            }
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', () => toggleMobileMenu(false));
+            }
         });
     </script>
 </body></html>
