@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARTISAN ROAST - The Art of the Pour</title>
+    <meta name="description" content="Artisan Roast - Premium scroll-driven canvas animation and high-end coffee craft presentation.">
+    
+    <!-- Tailwind CSS with Forms and Container Queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts: Playfair Display, DM Sans, Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet"/>
+    
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#352f2c",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#ffdbce",
+                        "on-background": "#ebe0db",
+                        "surface-dim": "#171210",
+                        "surface-variant": "#3a3430",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "background": "#171210",
+                        "on-primary-fixed-variant": "#5a4137",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#e3bfb2",
+                        "secondary-fixed-dim": "#ffb870",
+                        "surface-container-lowest": "#120d0b",
+                        "on-primary-container": "#9e7e73",
+                        "surface": "#171210",
+                        "surface-container-low": "#201b18",
+                        "on-tertiary": "#3c2f00",
+                        "primary": "#e3bfb2",
+                        "on-secondary-fixed-variant": "#693c00",
+                        "surface-container": "#241f1c",
+                        "inverse-primary": "#74584e",
+                        "secondary": "#ffb870",
+                        "outline": "#9c8e89",
+                        "on-surface": "#ebe0db",
+                        "inverse-surface": "#ebe0db",
+                        "tertiary": "#e9c349",
+                        "secondary-container": "#764400",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#ffe088",
+                        "on-secondary-container": "#fbb46b",
+                        "secondary-fixed": "#ffdcbe",
+                        "outline-variant": "#504440",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary-fixed": "#2c1600",
+                        "tertiary-container": "#cba72f",
+                        "on-secondary": "#4a2800",
+                        "surface-bright": "#3e3835",
+                        "surface-container-highest": "#3a3430",
+                        "surface-container-high": "#2e2926",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary-container": "#2c1810",
+                        "surface-tint": "#e3bfb2",
+                        "on-primary-fixed": "#2a170f",
+                        "on-surface-variant": "#d3c3be",
+                        "on-primary": "#422b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "label-caps": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["40px", { "lineHeight": "48px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
+
+    <!-- Transparent Frosted Header -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-500 h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+        <div class="font-headline-sm text-headline-sm tracking-[0.2em] text-tertiary cursor-pointer hover:opacity-85 transition-opacity" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            ARTISAN ROAST
+        </div>
+        <nav class="hidden md:flex gap-8">
+            <a class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer" onclick="document.getElementById('intro').scrollIntoView({behavior: 'smooth'})">Philosophy</a>
+            <a class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer" onclick="document.getElementById('collection').scrollIntoView({behavior: 'smooth'})">The Beans</a>
+            <a class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer" onclick="document.getElementById('alchemy').scrollIntoView({behavior: 'smooth'})">Our Craft</a>
+        </nav>
+        <button class="hidden md:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 border border-transparent hover:border-white/20" onclick="document.getElementById('collection').scrollIntoView({behavior: 'smooth'})">
+            Reserve Now
+        </button>
+        <button class="md:hidden text-tertiary hover:opacity-80 transition-opacity" id="mobile-menu-btn">
+            <span class="material-symbols-outlined text-3xl">menu</span>
+        </button>
+    </header>
+
+    <!-- Mobile Drawer Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-[#120d0b]/95 backdrop-blur-2xl translate-x-full transition-transform duration-500 flex flex-col justify-center items-center gap-8 pointer-events-none">
+        <button class="absolute top-6 right-6 text-tertiary hover:opacity-85 transition-opacity" id="mobile-menu-close">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { document.getElementById('intro').scrollIntoView({behavior: 'smooth'}); }, 300);">Philosophy</a>
+        <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { document.getElementById('collection').scrollIntoView({behavior: 'smooth'}); }, 300);">The Beans</a>
+        <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { document.getElementById('alchemy').scrollIntoView({behavior: 'smooth'}); }, 300);">Our Craft</a>
+        <button class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 mt-4 border border-transparent hover:border-white/20" onclick="toggleMobileMenu(false); setTimeout(() => { document.getElementById('collection').scrollIntoView({behavior: 'smooth'}); }, 300);">
+            Reserve Now
+        </button>
+    </div>
+
+    <!-- Minimal Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="loader-content">
+            <div id="loader-percentage" class="loader-percentage">0%</div>
+            <div class="loader-bar-container">
+                <div id="loader-bar-fill" class="loader-bar-fill"></div>
+            </div>
+            <div class="loader-subtext">Preloading Artisan Experience...</div>
+        </div>
+    </div>
+
+    <!-- Fixed Animation Canvas -->
+    <canvas id="animation-canvas"></canvas>
+
+    <!-- Centered Fixed Hero Typography (Fades out after 30% scroll) -->
+    <div id="scroll-hero-heading" class="fixed inset-0 flex flex-col justify-center items-center text-center pointer-events-none px-margin-mobile md:px-margin-desktop transition-all duration-75">
+        <h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+            Nescafe Classic
+        </h1>
+        <p class="font-body-lg text-body-lg text-tertiary tracking-[0.25em] uppercase font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+            100% Pure Coffee
+        </p>
+    </div>
+
+    <!-- Bottom Status Overlay (Scroll to craft coffee only) -->
+    <div id="scroll-status-overlay" class="status-overlay flex justify-center">
+        <div class="scroll-prompt">
+            <span class="mouse-icon">
+                <span class="mouse-wheel"></span>
+            </span>
+            <span class="prompt-text">Scroll to craft coffee</span>
+        </div>
+    </div>
+
+    <!-- Scroll Spacer to enable page scrolling for canvas frames (450vh) -->
+    <div class="scroll-spacer"></div>
+
+    <!-- Relative Content Wrapper overlaying on top of the fixed background canvas -->
+    <div class="relative z-10 w-full shadow-[0_-30px_50px_rgba(18,13,11,0.9)] bg-background">
+        
+        <!-- 2. Awaken Your Energy Section -->
+        <section id="intro" class="py-section-gap bg-surface-container-lowest px-margin-mobile md:px-margin-desktop flex items-center justify-center text-center">
+            <div class="max-w-4xl mx-auto fade-in-up">
+                <h2 class="font-headline-md text-headline-md text-on-background leading-relaxed">
+                    "Beyond Caffeine. <br/><span class="text-tertiary">It's the Art of the Pour.</span>"
+                </h2>
+                <div class="w-16 h-[1px] bg-tertiary mx-auto mt-8"></div>
+            </div>
+        </section>
+
+        <!-- 3. Product Variants -->
+        <section id="collection" class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background relative">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C68642]/5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="max-w-container-max mx-auto">
+                <div class="flex justify-between items-end mb-16 fade-in-up">
+                    <h3 class="font-headline-md text-headline-md text-on-background">The Collection</h3>
+                    <a class="hidden md:flex items-center text-tertiary font-label-caps text-label-caps hover:opacity-80 transition-opacity" href="#">
+                        VIEW ALL <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: COLOMBIA</div>
+                        <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+                            <div class="absolute bottom-4 left-4 z-20">
+                                <span class="material-symbols-outlined text-tertiary text-3xl">coffee_maker</span>
+                            </div>
+                        </div>
+                        <h4 class="font-headline-sm text-headline-sm text-on-background mb-2">Classic Reserve</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Notes of dark chocolate and toasted almond with a velvet finish.</p>
+                        <button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: ETHIOPIA</div>
+                        <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+                            <div class="absolute bottom-4 left-4 z-20">
+                                <span class="material-symbols-outlined text-tertiary text-3xl">local_cafe</span>
+                            </div>
+                        </div>
+                        <h4 class="font-headline-sm text-headline-sm text-on-background mb-2">Dark Midnight Roast</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Intense, smoky profile with hints of black cherry and cedar.</p>
+                        <button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.3s;">
+                        <div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">BLEND: SIGNATURE</div>
+                        <div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+                            <div class="absolute bottom-4 left-4 z-20">
+                                <span class="material-symbols-outlined text-tertiary text-3xl">workspace_premium</span>
+                            </div>
+                        </div>
+                        <h4 class="font-headline-sm text-headline-sm text-on-background mb-2">The Gold Standard</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Our proprietary blend. Rich caramel body with a bright citrus lift.</p>
+                        <button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Ingredients/Aroma Section -->
+        <section id="alchemy" class="py-section-gap bg-surface-container border-y border-outline-variant/10 relative overflow-hidden">
+            <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 fade-in-up">
+                    <div class="font-label-caps text-label-caps text-tertiary mb-4 tracking-[0.2em]">THE ALCHEMY</div>
+                    <h2 class="font-headline-md text-headline-md text-on-background mb-6">Sustainably Sourced, Surgically Roasted.</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                        We approach coffee as a science and an art. Every bean is tracked from high-altitude estates to our glowing roasters. The result is a cup of profound clarity and devastatingly rich texture.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center border-b border-tertiary/20 pb-4 group">
+                            <span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">eco</span>
+                            <span class="font-body-md text-body-md text-on-background">Regenerative Farming Partners</span>
+                        </li>
+                        <li class="flex items-center border-b border-tertiary/20 pb-4 group">
+                            <span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">thermostat</span>
+                            <span class="font-body-md text-body-md text-on-background">Micro-Batch Temperature Control</span>
+                        </li>
+                        <li class="flex items-center border-b border-tertiary/20 pb-4 group">
+                            <span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">water_drop</span>
+                            <span class="font-body-md text-body-md text-on-background">Triple-Filtered Extraction Process</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="order-1 lg:order-2 h-[500px] md:h-[700px] relative rounded-xl overflow-hidden glass-panel fade-in-up">
+                    <img alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space." class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-90 transition-transform duration-1000 hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiRamIf0dDP001-a4T4lZr7malMNo9b22pTR1yYvslX-WK3tOGkTajySQEPyKryyaEStum0OcY302j9Dn9HiazSdJwAuamwPXxFExDt-B7_Pn1uaVnOoue5gVTEPxknz0IUSk49wqEbjJm9m1ZGlhbKtxFIkcV_QVVQv6DkODGl-Zzc-tvPtGFbMFJS3oERjI_2xrThyeIzdaB3giaL1ROnBiiReRmkrlAGNkCGwvZcKnMGi2sdt8iEleHNKQURD5gROw0Zs7yAes"/>
+                    <div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-section-gap border-t border-outline-variant/20">
+            <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter">
+                <div class="font-headline-sm text-headline-sm text-tertiary mb-6 md:mb-0 text-center md:text-left">
+                    ARTISAN ROAST
+                </div>
+                <nav class="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
+                    <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Privacy Policy</a>
+                    <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Sustainability</a>
+                    <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Origin Stories</a>
+                    <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Terms</a>
+                </nav>
+                <div class="text-on-surface-variant text-sm text-center md:text-right">
+                    © 2026 Artisan Roast. The Art of the Pour.
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Sticky Buy-Now CTA -->
+    <div class="fixed bottom-8 right-8 z-50 opacity-0 translate-y-8 pointer-events-none transition-all duration-500" id="sticky-cta">
+        <button class="glass-panel bg-[#C68642]/90 backdrop-blur-md text-black px-6 py-3 rounded-full font-label-caps text-label-caps shadow-lg hover:shadow-[0_0_20px_rgba(198,134,66,0.4)] transition-all flex items-center gap-2 border border-[#D4AF37]/50">
+            <span class="material-symbols-outlined text-sm">shopping_bag</span>
+            RESERVE
+        </button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

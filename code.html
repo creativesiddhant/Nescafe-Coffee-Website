@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ARTISAN ROAST - The Art of the Pour</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#352f2c",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#ffdbce",
+                        "on-background": "#ebe0db",
+                        "surface-dim": "#171210",
+                        "surface-variant": "#3a3430",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "background": "#171210",
+                        "on-primary-fixed-variant": "#5a4137",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#e3bfb2",
+                        "secondary-fixed-dim": "#ffb870",
+                        "surface-container-lowest": "#120d0b",
+                        "on-primary-container": "#9e7e73",
+                        "surface": "#171210",
+                        "surface-container-low": "#201b18",
+                        "on-tertiary": "#3c2f00",
+                        "primary": "#e3bfb2",
+                        "on-secondary-fixed-variant": "#693c00",
+                        "surface-container": "#241f1c",
+                        "inverse-primary": "#74584e",
+                        "secondary": "#ffb870",
+                        "outline": "#9c8e89",
+                        "on-surface": "#ebe0db",
+                        "inverse-surface": "#ebe0db",
+                        "tertiary": "#e9c349",
+                        "secondary-container": "#764400",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#ffe088",
+                        "on-secondary-container": "#fbb46b",
+                        "secondary-fixed": "#ffdcbe",
+                        "outline-variant": "#504440",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary-fixed": "#2c1600",
+                        "tertiary-container": "#cba72f",
+                        "on-secondary": "#4a2800",
+                        "surface-bright": "#3e3835",
+                        "surface-container-highest": "#3a3430",
+                        "surface-container-high": "#2e2926",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary-container": "#2c1810",
+                        "surface-tint": "#e3bfb2",
+                        "on-primary-fixed": "#2a170f",
+                        "on-surface-variant": "#d3c3be",
+                        "on-primary": "#422b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "label-caps": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["40px", { "lineHeight": "48px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(44, 24, 16, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+        }
+        .gold-border {
+            border-top: 1px solid #D4AF37;
+        }
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
+<!-- TopNavBar -->
+<header class="bg-surface/60 backdrop-blur-xl sticky top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 w-full">
+<div class="font-headline-sm text-headline-sm tracking-[0.2em] text-tertiary dark:text-tertiary-fixed cursor-pointer">
+            ARTISAN ROAST
+        </div>
+<nav class="hidden md:flex gap-8">
+<a class="font-body-md text-body-md text-tertiary border-b border-tertiary pb-1 hover:opacity-80 transition-opacity" href="#">The Beans</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Our Craft</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Lounge</a>
+<a class="font-body-md text-body-md text-on-surface/80 hover:text-tertiary transition-colors duration-300 hover:opacity-80 transition-opacity" href="#">Brew Guides</a>
+</nav>
+<button class="hidden md:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-colors border border-transparent hover:border-white/20">
+            Reserve Now
+        </button>
+<button class="md:hidden text-tertiary">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</header>
+<!-- 1. Hero Section -->
+<section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0 bg-surface">
+<img alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space. The room is illuminated by high-key, soft white lighting that creates a bright, modern light-mode aesthetic. The artwork relies on a sophisticated palette of deep blacks and pristine whites, punctuated by intense accents of vibrant red. The mood is serene yet technologically advanced." class="w-full h-full object-cover float-anim opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfO4EG8eoZCoUhr-WFIMFpqRdF8X54L00GepizosBZzKbTk07LpZSOV-EkC8kLMTkySdmtU7yIY7xwqLgjbDMuZidrcic20Bt0TMGc7xK0mRf-YW5dXvYUUtxS6YyPMS8qM6cbVluM1ivQxI3cT-TsqfT9EXmz0DaHm-i0gm7HvOCe_bYLYaS5pZ8xfw-yBRXTJXdg6myBd3OC8q-P5o06gHcAiv6kUniVbVQ3MyqXtGv4fpHnZiNJ5nP0vgb5xBUtEc6PgZwwgGU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(198,134,66,0.15)_0%,transparent_60%)]"></div>
+</div>
+<div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto flex flex-col items-center">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background mb-6 fade-in-up">
+                The New Standard<br/><span class="text-tertiary italic">of Energy</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10 fade-in-up" style="transition-delay: 0.2s;">
+                Experience the cinematic minimalism of the perfect roast. A luxury ritual tailored for the discerning palate.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 fade-in-up" style="transition-delay: 0.4s;">
+<button class="bg-[#C68642] text-black px-8 py-4 rounded font-label-caps text-label-caps tracking-widest hover:border-inset hover:border-[#D4AF37] hover:shadow-[inset_0_0_0_1px_#D4AF37] transition-all relative overflow-hidden group">
+<span class="relative z-10">Reserve Now</span>
+<div class="absolute inset-0 bg-white/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+</button>
+<button class="border border-[#D4AF37] text-tertiary px-8 py-4 rounded font-headline-sm text-headline-sm hover:bg-tertiary/10 transition-colors">
+                    Discover the Craft
+                </button>
+</div>
+</div>
+</section>
+<!-- 2. Awaken Your Energy Section -->
+<section class="py-section-gap bg-surface-container-lowest px-margin-mobile md:px-margin-desktop flex items-center justify-center text-center">
+<div class="max-w-4xl mx-auto fade-in-up">
+<h2 class="font-headline-md text-headline-md text-on-background leading-relaxed">
+                "Beyond Caffeine. <br/><span class="text-tertiary">It's the Art of the Pour.</span>"
+            </h2>
+<div class="w-16 h-[1px] bg-tertiary mx-auto mt-8"></div>
+</div>
+</section>
+<!-- 3. Product Variants -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-background relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C68642]/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-16 fade-in-up">
+<h3 class="font-headline-md text-headline-md text-on-background">The Collection</h3>
+<a class="hidden md:flex items-center text-tertiary font-label-caps text-label-caps hover:opacity-80 transition-opacity" href="#">
+                    VIEW ALL <span class="material-symbols-outlined ml-2 text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.1s;">
+<div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: COLOMBIA</div>
+<div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="material-symbols-outlined text-tertiary text-3xl">coffee_maker</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-background mb-2">Classic Reserve</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Notes of dark chocolate and toasted almond with a velvet finish.</p>
+<button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.2s;">
+<div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">ORIGIN: ETHIOPIA</div>
+<div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="material-symbols-outlined text-tertiary text-3xl">local_cafe</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-background mb-2">Dark Midnight Roast</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Intense, smoky profile with hints of black cherry and cedar.</p>
+<button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel gold-border rounded-xl p-8 hover:-translate-y-2 transition-transform duration-500 fade-in-up" style="transition-delay: 0.3s;">
+<div class="bg-primary-container/50 inline-block px-3 py-1 rounded mb-6 font-label-caps text-label-caps text-tertiary">BLEND: SIGNATURE</div>
+<div class="h-64 mb-6 relative bg-surface-container-low rounded-lg overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="material-symbols-outlined text-tertiary text-3xl">workspace_premium</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-background mb-2">The Gold Standard</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Our proprietary blend. Rich caramel body with a bright citrus lift.</p>
+<button class="w-full border border-outline-variant/50 text-on-background py-3 rounded font-label-caps hover:border-tertiary hover:text-tertiary transition-colors">ACQUIRE</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Ingredients/Aroma Section -->
+<section class="py-section-gap bg-surface-container border-y border-outline-variant/10 relative overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1 fade-in-up">
+<div class="font-label-caps text-label-caps text-tertiary mb-4 tracking-[0.2em]">THE ALCHEMY</div>
+<h2 class="font-headline-md text-headline-md text-on-background mb-6">Sustainably Sourced, Surgically Roasted.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                    We approach coffee as a science and an art. Every bean is tracked from high-altitude estates to our glowing roasters. The result is a cup of profound clarity and devastatingly rich texture.
+                </p>
+<ul class="space-y-4">
+<li class="flex items-center border-b border-tertiary/20 pb-4 group">
+<span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">eco</span>
+<span class="font-body-md text-body-md text-on-background">Regenerative Farming Partners</span>
+</li>
+<li class="flex items-center border-b border-tertiary/20 pb-4 group">
+<span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">thermostat</span>
+<span class="font-body-md text-body-md text-on-background">Micro-Batch Temperature Control</span>
+</li>
+<li class="flex items-center border-b border-tertiary/20 pb-4 group">
+<span class="material-symbols-outlined text-tertiary mr-4 group-hover:scale-110 transition-transform">water_drop</span>
+<span class="font-body-md text-body-md text-on-background">Triple-Filtered Extraction Process</span>
+</li>
+</ul>
+</div>
+<div class="order-1 lg:order-2 h-[500px] md:h-[700px] relative rounded-xl overflow-hidden glass-panel fade-in-up">
+<img alt="A striking digital installation art piece featuring glowing, generative geometric shapes suspended in a vast, minimalist gallery space. The room is illuminated by high-key, soft white lighting that creates a bright, modern light-mode aesthetic. The artwork relies on a sophisticated palette of deep blacks and pristine whites, punctuated by intense accents of vibrant red. The mood is serene yet technologically advanced." class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-90 transition-transform duration-1000 hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiRamIf0dDP001-a4T4lZr7malMNo9b22pTR1yYvslX-WK3tOGkTajySQEPyKryyaEStum0OcY302j9Dn9HiazSdJwAuamwPXxFExDt-B7_Pn1uaVnOoue5gVTEPxknz0IUSk49wqEbjJm9m1ZGlhbKtxFIkcV_QVVQv6DkODGl-Zzc-tvPtGFbMFJS3oERjI_2xrThyeIzdaB3giaL1ROnBiiReRmkrlAGNkCGwvZcKnMGi2sdt8iEleHNKQURD5gROw0Zs7yAes"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-section-gap border-t border-outline-variant/20">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter">
+<div class="font-headline-sm text-headline-sm text-tertiary mb-6 md:mb-0 text-center md:text-left">
+                ARTISAN ROAST
+            </div>
+<nav class="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Sustainability</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Origin Stories</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="#">Terms</a>
+</nav>
+<div class="text-on-surface-variant text-sm text-center md:text-right">
+                © 2024 Artisan Roast &amp; Steam. The Art of the Pour.
+            </div>
+</div>
+</footer>
+<!-- Sticky Buy-Now CTA -->
+<div class="fixed bottom-8 right-8 z-50 fade-in-up" id="sticky-cta">
+<button class="glass-panel bg-[#C68642]/90 backdrop-blur-md text-black px-6 py-3 rounded-full font-label-caps text-label-caps shadow-lg hover:shadow-[0_0_20px_rgba(198,134,66,0.4)] transition-all flex items-center gap-2 border border-[#D4AF37]/50">
+<span class="material-symbols-outlined text-sm">shopping_bag</span>
+            RESERVE
+        </button>
+</div>
+<script>
+        // Simple scroll animation script
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up').forEach((el) => {
+                observer.observe(el);
+            });
+
+            // Sticky CTA visibility logic (simplified)
+            const stickyCta = document.getElementById('sticky-cta');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    stickyCta.classList.add('visible');
+                } else {
+                    stickyCta.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body></html>

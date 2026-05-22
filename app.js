@@ -1,0 +1,239 @@
+// Pure Scroll-Driven Canvas Animation Engine
+
+document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const canvas = document.getElementById('animation-canvas');
+    const ctx = canvas.getContext('2d');
+    const preloader = document.getElementById('preloader');
+    const loaderPercentage = document.getElementById('loader-percentage');
+    const loaderBarFill = document.getElementById('loader-bar-fill');
+    const statusOverlay = document.getElementById('scroll-status-overlay');
+    const scrollSpacer = document.querySelector('.scroll-spacer');
+    const stickyCta = document.getElementById('sticky-cta');
+    const heroHeading = document.getElementById('scroll-hero-heading');
+    
+    const mainHeader = document.getElementById('main-header');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    
+    // Config
+    const totalFrames = 240;
+    const images = [];
+    let loadedCount = 0;
+    
+    // Inertial Smooth Scrolling (Lerp) variables
+    let targetFrame = 0;
+    let currentFrame = 0;
+    const lerpFactor = 0.085; // Controls frame sliding smoothness (lower is slower/smoother)
+    
+    // 1. PRELOAD ALL FRAMES TO CACHE IN MEMORY
+    function preloadImages() {
+        for (let i = 1; i <= totalFrames; i++) {
+            const img = new Image();
+            const paddedNum = String(i).padStart(3, '0');
+            
+            // Reference the copied frames inside the local directory
+            img.src = `frames/ezgif-frame-${paddedNum}.jpg`;
+            
+            img.onload = () => {
+                loadedCount++;
+                const percent = Math.floor((loadedCount / totalFrames) * 100);
+                
+                // Update Loader GUI
+                loaderPercentage.textContent = `${percent}%`;
+                loaderBarFill.style.width = `${percent}%`;
+                
+                if (loadedCount === totalFrames) {
+                    setTimeout(startApp, 400); // Tiny aesthetic delay once 100% loaded
+                }
+            };
+            
+            img.onerror = () => {
+                // If single frame fails, still advance to prevent app lockup
+                console.warn(`Frame ${paddedNum} could not be preloaded.`);
+                loadedCount++;
+                if (loadedCount === totalFrames) {
+                    setTimeout(startApp, 400);
+                }
+            };
+            
+            images.push(img);
+        }
+    }
+    
+    // 2. INITIALIZE ANIMATION CANVAS AND REGISTER EVENTS
+    function startApp() {
+        preloader.classList.add('fade-out');
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('scroll', onScroll);
+        
+        // Initial drawing of frame index 0
+        drawFrame(0);
+        
+        // Start smooth render calculation loop
+        requestAnimationFrame(renderLoop);
+        
+        // Initialize IntersectionObserver for fade-in animations on bottom sections
+        const fadeInUpObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.08 });
+        
+        document.querySelectorAll('.fade-in-up').forEach((el) => {
+            fadeInUpObserver.observe(el);
+        });
+        
+        // Initialize Sticky CTA scroll visibility toggle
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                stickyCta.classList.add('visible');
+            } else {
+                stickyCta.classList.remove('visible');
+            }
+        });
+
+        // Mobile menu toggle functionality
+        function toggleMobileMenu(isOpen) {
+            if (isOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.remove('pointer-events-none');
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                mobileMenu.classList.add('pointer-events-none');
+            }
+        }
+        window.toggleMobileMenu = toggleMobileMenu;
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(true));
+        }
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', () => toggleMobileMenu(false));
+        }
+    }
+    
+    // 3. RETINA-READY ASPECT-FIT COVER SCALING
+    function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        
+        // Redraw immediately on window resize
+        drawFrame(Math.round(currentFrame));
+    }
+    
+    function drawFrame(index) {
+        const img = images[index];
+        if (!img || !img.complete) return;
+        
+        const canvasRatio = canvas.width / canvas.height;
+        const imgRatio = img.width / img.height;
+        
+        let drawWidth, drawHeight, x, y;
+        
+        // Compute "object-fit: cover" coordinates centered on canvas
+        if (canvasRatio > imgRatio) {
+            drawWidth = canvas.width;
+            drawHeight = canvas.width / imgRatio;
+            x = 0;
+            y = (canvas.height - drawHeight) / 2;
+        } else {
+            drawWidth = canvas.height * imgRatio;
+            drawHeight = canvas.height;
+            x = (canvas.width - drawWidth) / 2;
+            y = 0;
+        }
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Enable high scaling quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        
+        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+    }
+    
+    // 4. SCROLL INTERCEPTOR (CALCULATES FRAME TARGET STRICTLY WITHIN THE SPACER REGION)
+    function onScroll() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const spacerHeight = scrollSpacer.offsetHeight - window.innerHeight;
+        
+        let scrollPercent = 0;
+        if (spacerHeight > 0) {
+            scrollPercent = Math.min(1, Math.max(0, scrollTop / spacerHeight));
+        }
+        
+        // Map scroll percentage linearly to total animation frames range (0 to 239)
+        targetFrame = Math.min(totalFrames - 1, Math.max(0, Math.floor(scrollPercent * totalFrames)));
+        
+        // Handle Nescafe Classic hero heading fade/parallax (fade away at 30% scroll)
+        if (heroHeading) {
+            const threshold = 0.3;
+            if (scrollPercent <= threshold) {
+                const opacity = 1 - (scrollPercent / threshold);
+                const translateY = scrollPercent * -100; // Subtle elegant parallax scroll-up
+                heroHeading.style.opacity = opacity;
+                heroHeading.style.transform = `translateY(${translateY}px)`;
+                heroHeading.style.visibility = 'visible';
+            } else {
+                heroHeading.style.opacity = 0;
+                heroHeading.style.visibility = 'hidden';
+            }
+        }
+        
+        // Toggle overlays visibility when scrolling past the spacer
+        if (scrollTop >= spacerHeight - 50) {
+            if (statusOverlay) statusOverlay.classList.add('hidden');
+        } else {
+            if (statusOverlay) statusOverlay.classList.remove('hidden');
+        }
+
+        // Transition main-header background based on scroll position
+        if (mainHeader) {
+            if (scrollTop > 80) {
+                mainHeader.classList.remove('bg-transparent');
+                mainHeader.classList.remove('border-transparent');
+                mainHeader.classList.add('bg-background/80');
+                mainHeader.classList.add('backdrop-blur-xl');
+                mainHeader.classList.add('border-outline-variant/20');
+                mainHeader.classList.add('shadow-lg');
+            } else {
+                mainHeader.classList.add('bg-transparent');
+                mainHeader.classList.add('border-transparent');
+                mainHeader.classList.remove('bg-background/80');
+                mainHeader.classList.remove('backdrop-blur-xl');
+                mainHeader.classList.remove('border-outline-variant/20');
+                mainHeader.classList.remove('shadow-lg');
+            }
+        }
+    }
+    
+    // 5. SMOOTH INTERPOLATION (LERPING) RENDER LOOP
+    function renderLoop() {
+        const frameDiff = targetFrame - currentFrame;
+        
+        // If there's scroll movement lag, lerp currentFrame towards targetFrame
+        if (Math.abs(frameDiff) > 0.05) {
+            currentFrame += frameDiff * lerpFactor;
+            const drawIndex = Math.round(currentFrame);
+            drawFrame(drawIndex);
+        } else if (currentFrame !== targetFrame) {
+            currentFrame = targetFrame;
+            drawFrame(currentFrame);
+        }
+        
+        requestAnimationFrame(renderLoop);
+    }
+    
+    // Initialize
+    preloadImages();
+});

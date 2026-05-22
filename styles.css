@@ -1,0 +1,248 @@
+/* Reset & Base System */
+:root {
+    --bg-color: #08080a;
+    --accent-color: #df9140;
+    --accent-glow: rgba(223, 145, 64, 0.4);
+    --text-bright: #ffffff;
+    --text-muted: #7c7c8a;
+    --font-family: 'Outfit', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-bright);
+    font-family: var(--font-family);
+    overflow-x: hidden;
+}
+
+/* Styled Premium Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background: #1c1c24;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Minimal Loader Screen */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 260px;
+    text-align: center;
+}
+
+.loader-percentage {
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.8rem;
+    color: var(--text-bright);
+}
+
+.loader-bar-container {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 1.2rem;
+}
+
+.loader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: width 0.1s ease-out;
+}
+
+.loader-subtext {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+}
+
+/* Fixed Canvas background */
+#animation-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Scroll Spacer that generates the scroll depth */
+.scroll-spacer {
+    height: 450vh; /* Dedicated scroll depth for frame-by-frame animation */
+    position: relative;
+    z-index: 0;
+    pointer-events: none;
+}
+
+
+
+/* Status bar overlay (Bottom) */
+.status-overlay {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.5rem;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.status-overlay.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.scroll-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: rgba(10, 10, 12, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+}
+
+.mouse-icon {
+    width: 16px;
+    height: 26px;
+    border: 2px solid var(--text-bright);
+    border-radius: 8px;
+    position: relative;
+    opacity: 0.6;
+}
+
+.mouse-wheel {
+    width: 2px;
+    height: 6px;
+    background-color: var(--accent-color);
+    border-radius: 1px;
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollWheelAnim 1.6s infinite ease-in-out;
+}
+
+.prompt-text {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+}
+
+@keyframes scrollWheelAnim {
+    0% { transform: translate(-50%, 0); opacity: 0; }
+    30% { opacity: 1; }
+    80% { transform: translate(-50%, 8px); opacity: 0; }
+    100% { transform: translate(-50%, 0); opacity: 0; }
+}
+
+/* Mobile responsive layout tweaks */
+@media (max-width: 600px) {
+    .status-overlay {
+        bottom: 1.5rem;
+        padding: 0 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .scroll-prompt {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* ---------------------------------------------------- */
+/* Code.html Custom Integration Styling                 */
+/* ---------------------------------------------------- */
+
+.glass-panel {
+    background: rgba(44, 24, 16, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.gold-border {
+    border-top: 1px solid #D4AF37;
+}
+
+.float-anim {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Scroll Fade-In-Up System */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#scroll-hero-heading {
+    z-index: 5;
+    will-change: opacity, transform;
+}
