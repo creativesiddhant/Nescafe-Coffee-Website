@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability - ARTISAN ROAST</title>
+    <meta name="description" content="Artisan Roast Sustainability - Regenerative farming and carbon-neutral roasting craft.">
+    
+    <!-- Tailwind CSS with Forms and Container Queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts: Playfair Display, DM Sans, Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet"/>
+    
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#352f2c",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#ffdbce",
+                        "on-background": "#ebe0db",
+                        "surface-dim": "#171210",
+                        "surface-variant": "#3a3430",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "background": "#171210",
+                        "on-primary-fixed-variant": "#5a4137",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#e3bfb2",
+                        "secondary-fixed-dim": "#ffb870",
+                        "surface-container-lowest": "#120d0b",
+                        "on-primary-container": "#9e7e73",
+                        "surface": "#171210",
+                        "surface-container-low": "#201b18",
+                        "on-tertiary": "#3c2f00",
+                        "primary": "#e3bfb2",
+                        "on-secondary-fixed-variant": "#693c00",
+                        "surface-container": "#241f1c",
+                        "inverse-primary": "#74584e",
+                        "secondary": "#ffb870",
+                        "outline": "#9c8e89",
+                        "on-surface": "#ebe0db",
+                        "inverse-surface": "#ebe0db",
+                        "tertiary": "#e9c349",
+                        "secondary-container": "#764400",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#ffe088",
+                        "on-secondary-container": "#fbb46b",
+                        "secondary-fixed": "#ffdcbe",
+                        "outline-variant": "#504440",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary-fixed": "#2c1600",
+                        "tertiary-container": "#cba72f",
+                        "on-secondary": "#4a2800",
+                        "surface-bright": "#3e3835",
+                        "surface-container-highest": "#3a3430",
+                        "surface-container-high": "#2e2926",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary-container": "#2c1810",
+                        "surface-tint": "#e3bfb2",
+                        "on-primary-fixed": "#2a170f",
+                        "on-surface-variant": "#d3c3be",
+                        "on-primary": "#422b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "label-caps": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["40px", { "lineHeight": "48px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lenis Smooth Scroll CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
+
+    <!-- Frosted Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/20 h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+        <a href="index.html" class="font-headline-sm text-lg md:text-headline-sm tracking-[0.2em] text-tertiary cursor-pointer hover:opacity-85 transition-opacity">
+            ARTISAN ROAST
+        </a>
+        <a href="index.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">arrow_back</span> Return Home
+        </a>
+    </header>
+
+    <!-- Main Editorial Container -->
+    <main class="relative z-10 pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-5xl mx-auto min-h-screen">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="font-label-caps text-label-caps text-tertiary mb-4 tracking-[0.2em]">OUR COVENANT WITH NATURE</div>
+            <h1 class="font-headline-md text-4xl md:text-5xl lg:text-6xl text-on-background mb-6 leading-tight">
+                Sustaining the Soil, <br/><span class="text-tertiary">Surgical Roasting.</span>
+            </h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">
+                We approach coffee as a cycle of energy. We believe true luxury respects the earth and ensures a sustainable livelihood for the artisans who cultivate our exceptional crops.
+            </p>
+        </div>
+
+        <!-- 3-Column Pillars Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16">
+            <!-- Pillar 1 -->
+            <div class="glass-panel gold-border rounded-xl p-8 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-primary-container/40 flex items-center justify-center text-tertiary mb-6">
+                    <span class="material-symbols-outlined text-4xl">eco</span>
+                </div>
+                <h3 class="font-headline-sm text-xl text-on-background mb-3">Regenerative Soil</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    We partner exclusively with estates that implement biodynamic composting, terracing, and crop rotation to restore natural topsoil and native micro-ecology.
+                </p>
+            </div>
+            <!-- Pillar 2 -->
+            <div class="glass-panel gold-border rounded-xl p-8 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-primary-container/40 flex items-center justify-center text-tertiary mb-6">
+                    <span class="material-symbols-outlined text-4xl">thermostat_carbon</span>
+                </div>
+                <h3 class="font-headline-sm text-xl text-on-background mb-3">Carbon-Neutral Heat</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Our customized micro-batch roasters feature thermal recovery loops that recycle air temperature, cutting gas emissions by over 45% compared to legacy drums.
+                </p>
+            </div>
+            <!-- Pillar 3 -->
+            <div class="glass-panel gold-border rounded-xl p-8 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-primary-container/40 flex items-center justify-center text-tertiary mb-6">
+                    <span class="material-symbols-outlined text-4xl">handshake</span>
+                </div>
+                <h3 class="font-headline-sm text-xl text-on-background mb-3">Circular Pricing</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    We ignore standard market trade rates, establishing direct multi-year agreements with growers at an average of 150% above Fair Trade baselines.
+                </p>
+            </div>
+        </div>
+
+        <!-- In-depth Story Section -->
+        <div class="glass-panel gold-border rounded-xl p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="font-headline-sm text-3xl text-on-background mb-6">Zero Plastic. Zero Waste.</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-6">
+                    Every element of our presentation represents careful material engineering. Our coffee pouches are constructed from biodegradable wood pulp lined with plant-derived PLA barriers, offering optimal preservation while decomposing naturally in domestic compost heaps within 180 days.
+                </p>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Our outer presentation boxes are bound with non-toxic, soy-based ink and utilize organic, recycled kraft fiber cardboard. We challenge the standard disposable concept of premium packaging, ensuring every shipping element returns to the circle.
+                </p>
+            </div>
+            <div class="h-64 sm:h-96 relative rounded-lg overflow-hidden glass-panel">
+                <img alt="Lush green organic coffee farm under bright sunrise." class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-75" src="assets/coffee_alchemy.png"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-12 border-t border-outline-variant/20 relative z-10">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter">
+            <div class="font-headline-sm text-headline-sm text-tertiary mb-6 md:mb-0">
+                ARTISAN ROAST
+            </div>
+            <nav class="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="privacy.html">Privacy Policy</a>
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="sustainability.html">Sustainability</a>
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="origin-stories.html">Origin Stories</a>
+                <a class="text-on-surface-variant hover:text-on-surface transition-colors hover:text-tertiary transition-colors duration-300" href="terms.html">Terms</a>
+            </nav>
+            <div class="text-on-surface-variant text-sm">
+                © 2026 Artisan Roast. The Art of the Pour.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lenis Smooth Scroll JS -->
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lenis Smooth Scroll
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+            });
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+        });
+    </script>
+</body>
+</html>

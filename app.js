@@ -125,6 +125,131 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobileMenuClose) {
             mobileMenuClose.addEventListener('click', () => toggleMobileMenu(false));
         }
+
+        // Reservation Modal Logic
+        const reservationModal = document.getElementById('reservation-modal');
+        const modalStageForm = document.getElementById('modal-stage-form');
+        const modalStageSuccess = document.getElementById('modal-stage-success');
+        const reservationForm = document.getElementById('reservation-form');
+        const qtyEl = document.getElementById('coffee-qty');
+        const totalEl = document.getElementById('coffee-total');
+        const nameInput = document.getElementById('res-name');
+        const emailInput = document.getElementById('res-email');
+        
+        const btnClassic = document.getElementById('coffee-btn-classic');
+        const btnMidnight = document.getElementById('coffee-btn-midnight');
+        const btnGold = document.getElementById('coffee-btn-gold');
+        
+        const prices = {
+            classic: 24.00,
+            midnight: 28.00,
+            gold: 32.00
+        };
+        
+        const blendNames = {
+            classic: "Classic Reserve",
+            midnight: "Dark Midnight Roast",
+            gold: "The Gold Standard"
+        };
+        
+        let selectedBlend = 'classic';
+        let quantity = 1;
+        
+        function selectCoffee(blendName) {
+            selectedBlend = blendName;
+            
+            // Reset all buttons to inactive styling
+            [btnClassic, btnMidnight, btnGold].forEach(btn => {
+                if (btn) {
+                    btn.classList.remove('border-tertiary', 'text-tertiary');
+                    btn.classList.add('border-outline-variant/40', 'text-on-surface-variant');
+                }
+            });
+            
+            // Apply active styling to selected button
+            const activeBtn = document.getElementById(`coffee-btn-${blendName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-outline-variant/40', 'text-on-surface-variant');
+                activeBtn.classList.add('border-tertiary', 'text-tertiary');
+            }
+            
+            updatePrice();
+        }
+        
+        function adjustQty(amount) {
+            quantity = Math.max(1, quantity + amount);
+            if (qtyEl) qtyEl.textContent = quantity;
+            updatePrice();
+        }
+        
+        function updatePrice() {
+            const pricePerBag = prices[selectedBlend] || 24.00;
+            const totalPrice = pricePerBag * quantity;
+            if (totalEl) {
+                totalEl.textContent = `$${totalPrice.toFixed(2)}`;
+            }
+        }
+        
+        function openReservationModal(defaultBlend) {
+            // Reset input values
+            if (nameInput) nameInput.value = '';
+            if (emailInput) emailInput.value = '';
+            
+            // Set default quantity
+            quantity = 1;
+            if (qtyEl) qtyEl.textContent = '1';
+            
+            // Select default blend
+            selectCoffee(defaultBlend || 'classic');
+            
+            // Show form, hide success screen
+            if (modalStageForm) modalStageForm.classList.remove('hidden');
+            if (modalStageSuccess) modalStageSuccess.classList.add('hidden');
+            
+            // Open modal modal transitions
+            if (reservationModal) {
+                reservationModal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                reservationModal.classList.add('opacity-100', 'scale-100');
+            }
+            
+            // Lock body scroll
+            window.lenis?.stop();
+        }
+        
+        function closeReservationModal() {
+            if (reservationModal) {
+                reservationModal.classList.remove('opacity-100', 'scale-100');
+                reservationModal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            }
+            // Unlock body scroll
+            window.lenis?.start();
+        }
+        
+        function submitReservationForm() {
+            const confirmId = document.getElementById('confirm-id');
+            const confirmBlend = document.getElementById('confirm-blend');
+            const confirmQty = document.getElementById('confirm-qty');
+            const confirmTotal = document.getElementById('confirm-total');
+            
+            const randomId = `#AR-${Math.floor(10000 + Math.random() * 90000)}`;
+            const pricePerBag = prices[selectedBlend] || 24.00;
+            const totalPrice = pricePerBag * quantity;
+            
+            if (confirmId) confirmId.textContent = randomId;
+            if (confirmBlend) confirmBlend.textContent = blendNames[selectedBlend];
+            if (confirmQty) confirmQty.textContent = `${quantity} ${quantity === 1 ? 'Bag' : 'Bags'}`;
+            if (confirmTotal) confirmTotal.textContent = `$${totalPrice.toFixed(2)}`;
+            
+            if (modalStageForm) modalStageForm.classList.add('hidden');
+            if (modalStageSuccess) modalStageSuccess.classList.remove('hidden');
+        }
+        
+        // Export to window scope so inline HTML onclick and onsubmit handlers can reach them
+        window.selectCoffee = selectCoffee;
+        window.adjustQty = adjustQty;
+        window.openReservationModal = openReservationModal;
+        window.closeReservationModal = closeReservationModal;
+        window.submitReservationForm = submitReservationForm;
     }
     
     // 3. RETINA-READY ASPECT-FIT COVER SCALING (OPTIMIZED)
