@@ -187,40 +187,11 @@ function initializeAuthSystem() {
 
     // 7. PUBLIC INTERFACES EXPOSED TO CLIENT CODE
     window.openAuthModal = function(defaultTab = 'login', customAlertText = '') {
-        const modal = document.getElementById('auth-modal');
-        const alertBox = document.getElementById('auth-modal-alert');
-        
-        if (alertBox) {
-            if (customAlertText) {
-                alertBox.textContent = customAlertText;
-                alertBox.classList.remove('hidden');
-            } else {
-                alertBox.classList.add('hidden');
-            }
-        }
-
-        switchTab(defaultTab);
-
-        if (modal) {
-            modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-            modal.classList.add('opacity-100', 'scale-100');
-            window.lenis?.stop(); // lock scroll
-        } else if (isLoginPage) {
-            // We are on the dedicated login page - scroll smoothly to the login card
-            const mainCard = document.querySelector('main .glass-panel') || document.querySelector('main');
-            if (mainCard) {
-                mainCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
+        window.location.href = 'login.html';
     };
 
     window.closeAuthModal = function() {
-        const modal = document.getElementById('auth-modal');
-        if (modal) {
-            modal.classList.remove('opacity-100', 'scale-100');
-            modal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-            window.lenis?.start(); // unlock scroll
-        }
+        // No-op fallback
     };
 
     window.openAccountDrawer = function() {
@@ -260,10 +231,10 @@ function initializeAuthSystem() {
         }
 
         if (!currentUser) {
-            // Close reservation modal and open auth modal with customized alert
-            window.closeReservationModal();
+            // Close reservation modal and redirect to login page
+            window.closeReservationModal?.();
             setTimeout(() => {
-                window.openAuthModal('register', 'Secure Your Allocation: Please create an account or sign in to reserve your batch.');
+                window.location.href = 'login.html';
             }, 350);
             return { success: false, pending: true };
         }
@@ -816,9 +787,9 @@ function initializeAuthSystem() {
                 <p class="font-body-md text-xs text-on-surface-variant/80 max-w-[280px] leading-relaxed mb-6">
                     Sign in to secure premium coffee batches directly, view order histories, and manage allocations.
                 </p>
-                <button onclick="window.closeAccountDrawer(); setTimeout(() => window.openAuthModal('login'), 350)" class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-xs hover:bg-[#D4AF37] transition-all duration-300 font-bold uppercase tracking-wider">
+                <a href="login.html" onclick="window.closeAccountDrawer()" class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-xs hover:bg-[#D4AF37] transition-all duration-300 font-bold uppercase tracking-wider text-center inline-block cursor-pointer">
                     Sign In
-                </button>
+                </a>
             </div>
         `;
         document.body.appendChild(drawer);

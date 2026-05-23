@@ -247,10 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isDbConfigured) {
                     if (!authState.isAuthenticated) {
-                        // Close reservation modal and open auth modal with customized alert
+                        // Close reservation modal and redirect to login page
                         closeReservationModal();
                         setTimeout(() => {
-                            window.openAuthModal('register', 'Secure Your Allocation: An account is required to lock in your premium batch and track roasting status.');
+                            window.location.href = 'login.html';
                         }, 350);
                         return;
                     }
