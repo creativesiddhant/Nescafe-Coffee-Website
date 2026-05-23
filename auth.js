@@ -6,7 +6,12 @@
 
 function initializeAuthSystem() {
     // Check if we are on the dedicated login page to avoid rendering duplicate elements
-    const isLoginPage = window.location.pathname.includes('login') || window.location.href.includes('login');
+    const isLoginPage = (function() {
+        const path = window.location.pathname.toLowerCase();
+        const segments = path.split('/').filter(Boolean);
+        const lastSegment = segments[segments.length - 1] || '';
+        return lastSegment === 'login' || lastSegment === 'login.html';
+    })();
 
 
     // 1. DYNAMICALLY INJECT CSS STYLES FOR AUTH & DRAWER
