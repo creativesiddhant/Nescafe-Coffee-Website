@@ -125,9 +125,19 @@
             <a class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer" onclick="window.lenis?.scrollTo('#collection')">The Beans</a>
             <a class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer" onclick="window.lenis?.scrollTo('#alchemy')">Our Craft</a>
         </nav>
-        <button class="hidden lg:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 border border-transparent hover:border-white/20" onclick="openReservationModal('classic')">
-            Reserve Now
-        </button>
+        
+        <!-- Header Actions flex group -->
+        <div class="flex items-center gap-4">
+            <div class="auth-header-container flex items-center h-full">
+                <button onclick="window.openAuthModal('login')" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
+                    Sign In
+                </button>
+            </div>
+            <button class="hidden lg:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 border border-transparent hover:border-white/20" onclick="openReservationModal('classic')">
+                Reserve Now
+            </button>
+        </div>
+
         <button class="lg:hidden text-tertiary hover:opacity-80 transition-opacity" id="mobile-menu-btn">
             <span class="material-symbols-outlined text-3xl">menu</span>
         </button>
@@ -141,6 +151,13 @@
         <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { window.lenis?.scrollTo('#intro'); }, 350);">Philosophy</a>
         <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { window.lenis?.scrollTo('#collection'); }, 350);">The Beans</a>
         <a class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300 cursor-pointer" onclick="toggleMobileMenu(false); setTimeout(() => { window.lenis?.scrollTo('#alchemy'); }, 350);">Our Craft</a>
+        
+        <div class="auth-mobile-container w-full flex justify-center mt-2">
+            <button onclick="toggleMobileMenu(false); setTimeout(() => { window.openAuthModal('login'); }, 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
+                Sign In
+            </button>
+        </div>
+
         <button class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 mt-4 border border-transparent hover:border-white/20" onclick="toggleMobileMenu(false); setTimeout(() => { openReservationModal('classic'); }, 350);">
             Reserve Now
         </button>

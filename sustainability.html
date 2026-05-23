@@ -120,9 +120,17 @@
         <a href="index.html" class="font-headline-sm text-lg md:text-headline-sm tracking-[0.2em] text-tertiary cursor-pointer hover:opacity-85 transition-opacity">
             NESCAFÉ ROAST
         </a>
-        <a href="index.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">arrow_back</span> Return Home
-        </a>
+        
+        <div class="flex items-center gap-6">
+            <div class="auth-header-container flex items-center h-full">
+                <button onclick="window.openAuthModal('login')" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
+                    Sign In
+                </button>
+            </div>
+            <a href="index.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> Return Home
+            </a>
+        </div>
     </header>
 
     <!-- Main Editorial Container -->
