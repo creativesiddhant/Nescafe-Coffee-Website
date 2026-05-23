@@ -7,41 +7,109 @@
 const DEFAULT_SUPABASE_URL = "https://pjpsfxqblrazjschnisu.supabase.co";
 const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcHNmeHFibHJhempzY2huaXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NzI4NTYsImV4cCI6MjA5NTA0ODg1Nn0.h4v2hmdcRqUln1bjlqYPc-exksaJGeL9dxNy4WzTAjU";
 
-// 1. Resolve credentials (hardcoded config or localStorage override)
-const storedUrl = localStorage.getItem("supabase_url");
-const storedKey = localStorage.getItem("supabase_anon_key");
+// Safe Storage Helpers to prevent SecurityErrors on file:// protocol
+function safeGetItem(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (error) {
+        console.warn("☕ Artisan Config: Local storage read restricted. Falling back.", error);
+        return null;
+    }
+}
 
-const activeUrl = (storedUrl && storedUrl.trim() !== "") ? storedUrl.trim() : DEFAULT_SUPABASE_URL;
-const activeKey = (storedKey && storedKey.trim() !== "") ? storedKey.trim() : DEFAULT_SUPABASE_ANON_KEY;
+function safeSetItem(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        console.warn("☕ Artisan Config: Local storage write restricted.", error);
+        return false;
+    }
+}
+
+function safeRemoveItem(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        console.warn("☕ Artisan Config: Local storage deletion restricted.", error);
+        return false;
+    }
+}
 
 // Helper to check if credentials are still placeholder strings
 function checkIsPlaceholder(url, key) {
     return !url || 
-           url === "YOUR_SUPABASE_URL" || 
+           url.includes("YOUR_SUPABASE_URL") || 
            url.trim() === "" || 
            !key || 
-           key === "YOUR_SUPABASE_ANON_KEY" || 
+           key.includes("YOUR_SUPABASE_ANON_KEY") || 
            key.trim() === "";
+}
+
+const defaultIsPlaceholder = checkIsPlaceholder(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_ANON_KEY);
+
+// 1. Resolve credentials (hardcoded config or localStorage override)
+const storedUrl = safeGetItem("supabase_url");
+const storedKey = safeGetItem("supabase_anon_key");
+
+const storedIsPlaceholder = checkIsPlaceholder(storedUrl, storedKey);
+
+// Self-healing: if defaults are valid, always ignore stored values if they are placeholders
+let activeUrl = DEFAULT_SUPABASE_URL;
+let activeKey = DEFAULT_SUPABASE_ANON_KEY;
+
+if (defaultIsPlaceholder && storedUrl && storedKey && !storedIsPlaceholder) {
+    activeUrl = storedUrl.trim();
+    activeKey = storedKey.trim();
+} else if (!defaultIsPlaceholder && storedUrl && storedKey && !storedIsPlaceholder) {
+    // If both default and stored are valid non-placeholders, let stored take precedence as developer override
+    activeUrl = storedUrl.trim();
+    activeKey = storedKey.trim();
 }
 
 const isConfigured = !checkIsPlaceholder(activeUrl, activeKey);
 let supabaseClient = null;
 
+// Resolve the global supabase object (checking window and standard global namespace)
+const globalSupabase = typeof window.supabase !== 'undefined' ? window.supabase : (typeof supabase !== 'undefined' ? supabase : null);
+
 // 2. Initialize the Supabase Client if configured and CDN is loaded
-if (isConfigured && typeof window.supabase !== 'undefined') {
+if (isConfigured && globalSupabase) {
     try {
-        supabaseClient = window.supabase.createClient(activeUrl, activeKey, {
+        // Safe check for custom session storage engine (supports memory fallback for file:// sandbox)
+        let storageEngine = null;
+        try {
+            localStorage.setItem("sb_persistence_test", "1");
+            localStorage.removeItem("sb_persistence_test");
+            storageEngine = localStorage;
+        } catch (storageError) {
+            console.log("ℹ️ Artisan Roast: Local storage is sandboxed. Loading in-memory session vault.");
+            window.sb_memory_vault = window.sb_memory_vault || {};
+            storageEngine = {
+                getItem: (k) => window.sb_memory_vault[k] || null,
+                setItem: (k, v) => { window.sb_memory_vault[k] = v; },
+                removeItem: (k) => { delete window.sb_memory_vault[k]; }
+            };
+        }
+
+        supabaseClient = globalSupabase.createClient(activeUrl, activeKey, {
             auth: {
                 persistSession: true,
-                autoRefreshToken: true
+                autoRefreshToken: true,
+                storage: storageEngine
             }
         });
         console.log("☕ Artisan Roast Backend: Supabase initialized successfully.");
     } catch (error) {
         console.error("❌ Artisan Roast Backend: Failed to initialize Supabase client.", error);
     }
-} else if (!isConfigured) {
-    console.log("ℹ️ Artisan Roast Backend: Supabase is waiting for connection parameters. Open the Account Panel to configure.");
+} else {
+    if (!isConfigured) {
+        console.log("ℹ️ Artisan Roast Backend: Supabase is waiting for connection parameters. Open the Account Panel to configure.");
+    } else if (!globalSupabase) {
+        console.warn("⚠️ Artisan Roast Backend: Supabase SDK script has not finished loading.");
+    }
 }
 
 // 3. Export configuration helpers globally
@@ -49,17 +117,17 @@ window.supabaseConfig = {
     url: activeUrl,
     key: activeKey,
     isConfigured: isConfigured,
-    hasOverride: !!(storedUrl && storedKey),
+    hasOverride: !!(storedUrl && storedKey && !storedIsPlaceholder),
     saveConfig: (url, key) => {
         if (!url || !key) return false;
-        localStorage.setItem("supabase_url", url.trim());
-        localStorage.setItem("supabase_anon_key", key.trim());
+        safeSetItem("supabase_url", url.trim());
+        safeSetItem("supabase_anon_key", key.trim());
         location.reload();
         return true;
     },
     clearConfig: () => {
-        localStorage.removeItem("supabase_url");
-        localStorage.removeItem("supabase_anon_key");
+        safeRemoveItem("supabase_url");
+        safeRemoveItem("supabase_anon_key");
         location.reload();
     }
 };

@@ -397,7 +397,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const origText = submitBtn.textContent;
             
             const errEl = document.getElementById('reg-error');
-            if (errEl) errEl.classList.add('hidden');
+            if (errEl) {
+                errEl.classList.add('hidden');
+                errEl.className = "text-center p-3 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs";
+            }
 
             if (!supabase) {
                 if (errEl) {
@@ -426,9 +429,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Check if email confirmation is required
                 if (data.user && data.session === null) {
                     if (errEl) {
-                        errEl.textContent = "Registration successful! Please check your email inbox to confirm your account.";
+                        errEl.innerHTML = `
+                            <strong>Registration pending verification!</strong><br/>
+                            An activation link has been sent to your email inbox. Please click the link to confirm your account.<br/>
+                            <div class="mt-2 pt-2 border-t border-tertiary/10 text-[10px] opacity-90">
+                                💡 <em>Note: You can turn off email confirmation in your <strong>Supabase Dashboard > Authentication > Providers > Email</strong> to register instantly without email checks!</em>
+                            </div>
+                        `;
                         errEl.classList.remove('hidden');
-                        errEl.className = "text-center p-3 border border-tertiary/20 rounded bg-primary-container/20 text-tertiary text-xs";
+                        errEl.className = "p-4 border border-tertiary/20 rounded bg-primary-container/20 text-tertiary text-xs leading-relaxed text-left";
                     }
                     submitBtn.textContent = "Awaiting Confirmation";
                 } else {
@@ -438,7 +447,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.error("Sign up error:", err);
                 if (errEl) {
-                    errEl.textContent = err.message || "An unexpected error occurred.";
+                    let errMsg = err.message || "An unexpected error occurred.";
+                    if (errMsg.toLowerCase().includes("failed to fetch")) {
+                        errMsg = "<strong>Network Connection Blocked:</strong><br/>Failed to connect to Supabase. If you have an ad-blocker active (e.g. uBlock Origin or Brave Shield), please disable it for this local site since it may block third-party database API calls.";
+                        errEl.className = "p-4 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs leading-relaxed text-left";
+                    }
+                    errEl.innerHTML = errMsg;
                     errEl.classList.remove('hidden');
                 }
                 submitBtn.disabled = false;
@@ -455,7 +469,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const origText = submitBtn.textContent;
             
             const errEl = document.getElementById('log-error');
-            if (errEl) errEl.classList.add('hidden');
+            if (errEl) {
+                errEl.classList.add('hidden');
+                errEl.className = "text-center p-3 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs";
+            }
 
             if (!supabase) {
                 if (errEl) {
@@ -479,7 +496,21 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.error("Sign in error:", err);
                 if (errEl) {
-                    errEl.textContent = err.message || "Invalid credentials.";
+                    let errMsg = err.message || "Invalid credentials.";
+                    if (errMsg.toLowerCase().includes("email not confirmed")) {
+                        errMsg = `
+                            <strong>Email verification pending!</strong><br/>
+                            You must confirm your email before signing in. Please check your inbox.<br/>
+                            <div class="mt-2 pt-2 border-t border-error/10 text-[10px] opacity-90">
+                                💡 <em>To bypass this, toggle off <strong>Confirm Email</strong> in your <strong>Supabase Dashboard > Authentication > Providers > Email</strong> settings.</em>
+                            </div>
+                        `;
+                        errEl.className = "p-4 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs leading-relaxed text-left";
+                    } else if (errMsg.toLowerCase().includes("failed to fetch")) {
+                        errMsg = "<strong>Connection Error:</strong><br/>Failed to connect to Supabase. If you have an ad-blocker active (e.g. uBlock Origin or Brave Shield), please disable it for this local site as it blocks API endpoints.";
+                        errEl.className = "p-4 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs leading-relaxed text-left";
+                    }
+                    errEl.innerHTML = errMsg;
                     errEl.classList.remove('hidden');
                 }
                 submitBtn.disabled = false;
