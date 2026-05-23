@@ -295,14 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
         desktopContainers.forEach(container => {
             if (isAuth) {
                 container.innerHTML = `
-                    <button onclick="window.openAccountDrawer()" class="flex items-center gap-2 border border-tertiary/40 text-tertiary px-4 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
-                        <span class="material-symbols-outlined text-[16px]">account_circle</span>
+                    <button onclick="window.openAccountDrawer()" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-5 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
+                        <span class="material-symbols-outlined text-[18px]">account_circle</span>
                         ${userName.split(' ')[0]}
                     </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="window.openAuthModal('login')" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300 hover:opacity-90 cursor-pointer">
+                    <button onclick="window.openAuthModal('login')" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
                         Sign In
                     </button>
                 `;
@@ -313,14 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileDrawerContainers.forEach(container => {
             if (isAuth) {
                 container.innerHTML = `
-                    <button onclick="toggleMobileMenu(false); setTimeout(window.openAccountDrawer, 350)" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps">
+                    <button onclick="toggleMobileMenu(false); setTimeout(window.openAccountDrawer, 350)" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps w-full max-w-[200px]">
                         <span class="material-symbols-outlined text-[18px]">account_circle</span>
                         My Account
                     </button>
                 `;
             } else {
                 container.innerHTML = `
-                    <button onclick="toggleMobileMenu(false); setTimeout(() => window.openAuthModal('login'), 350)" class="font-headline-sm text-headline-sm text-on-surface/85 hover:text-tertiary transition-colors duration-300">
+                    <button onclick="toggleMobileMenu(false); setTimeout(() => window.openAuthModal('login'), 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
                         Sign In
                     </button>
                 `;
@@ -736,13 +736,28 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if container already exists
             if (!header.querySelector('.auth-header-container')) {
                 const headerContainer = document.createElement('div');
-                headerContainer.className = "auth-header-container flex items-center h-full mr-4";
+                headerContainer.className = "auth-header-container flex items-center h-full mr-2";
                 
-                // Find a logical sibling: either button.bg-tertiary, or the back-to-home link, or the last child
-                const actionBtn = header.querySelector('button.bg-tertiary') || header.querySelector('a[href="index.html"]:last-child') || header.lastElementChild;
+                // Find a logical sibling: either button.bg-tertiary, or the back-to-home link
+                const actionBtn = header.querySelector('button.bg-tertiary') || header.querySelector('a[href="index.html"]:last-child');
+                
                 if (actionBtn) {
-                    actionBtn.parentNode.insertBefore(headerContainer, actionBtn);
+                    // To prevent justify-between from spreading the navigation and action buttons apart,
+                    // we dynamically wrap both buttons into a flex group on the right.
+                    let actionGroup = header.querySelector('.header-action-group');
+                    if (!actionGroup) {
+                        actionGroup = document.createElement('div');
+                        actionGroup.className = "header-action-group flex items-center gap-4 h-full ml-auto";
+                        
+                        // Insert actionGroup right before actionBtn's original place, then append both
+                        actionBtn.parentNode.insertBefore(actionGroup, actionBtn);
+                        actionGroup.appendChild(headerContainer);
+                        actionGroup.appendChild(actionBtn);
+                    } else {
+                        actionGroup.insertBefore(headerContainer, actionBtn);
+                    }
                 } else {
+                    // Fallback to direct insertion if no primary action button
                     header.appendChild(headerContainer);
                 }
             }
@@ -753,7 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const reserveBtnMobile = mobileMenuDrawer.querySelector('button.bg-tertiary');
             if (reserveBtnMobile && !mobileMenuDrawer.querySelector('.auth-mobile-container')) {
                 const mobileContainer = document.createElement('div');
-                mobileContainer.className = "auth-mobile-container mt-2";
+                mobileContainer.className = "auth-mobile-container mt-2 w-full flex justify-center";
                 reserveBtnMobile.parentNode.insertBefore(mobileContainer, reserveBtnMobile);
             }
         }
