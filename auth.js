@@ -39,11 +39,6 @@ function initializeAuthSystem() {
             console.log(`☕ Auth State Change: ${event}`);
             if (session) {
                 currentUser = session.user;
-                // If on login page, redirect home instantly
-                if (isLoginPage) {
-                    window.location.href = 'index.html';
-                    return;
-                }
                 // Fetch profile metadata
                 await fetchProfileAndReservations();
             } else {
@@ -57,10 +52,6 @@ function initializeAuthSystem() {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
                 currentUser = session.user;
-                if (isLoginPage) {
-                    window.location.href = 'index.html';
-                    return;
-                }
                 await fetchProfileAndReservations();
             } else {
                 updateHeaderAndDrawerState(false);
@@ -88,15 +79,18 @@ function initializeAuthSystem() {
             } else if (profileErr && profileErr.code !== 'PGRST116') {
                 console.error("Error loading user profile:", profileErr);
             }
-
-            // Update UI with authenticated state
-            updateHeaderAndDrawerState(true);
-            
-            // Fetch reservations list
-            await refreshReservationsList();
-
         } catch (err) {
             console.error("Database fetch exception:", err);
+        } finally {
+            // ALWAYS update the UI with authenticated state if we have a currentUser!
+            updateHeaderAndDrawerState(true);
+            
+            // Fetch reservations list in background
+            try {
+                await refreshReservationsList();
+            } catch (resErr) {
+                console.error("Failed to refresh reservations list:", resErr);
+            }
         }
     }
 
