@@ -4,7 +4,7 @@
 // This script manages authentication state, database operations, and
 // dynamically renders the beautiful glassmorphic Auth Modal and Account Drawer.
 
-document.addEventListener('DOMContentLoaded', () => {
+function initializeAuthSystem() {
     // 1. DYNAMICALLY INJECT CSS STYLES FOR AUTH & DRAWER
     injectAuthStyles();
 
@@ -304,11 +304,22 @@ document.addEventListener('DOMContentLoaded', () => {
         desktopContainers.forEach(container => {
             if (isAuth) {
                 container.innerHTML = `
-                    <button onclick="window.openAccountDrawer()" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-5 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
-                        <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                        ${userName.split(' ')[0]}
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button onclick="window.openAccountDrawer()" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
+                            <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                            ${userName.split(' ')[0]}
+                        </button>
+                        <button id="header-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300 bg-transparent">
+                            Logout
+                        </button>
+                    </div>
                 `;
+                // Add event listener for direct logout
+                container.querySelector('#header-logout-btn')?.addEventListener('click', async () => {
+                    if (window.supabaseClient) {
+                        await window.supabaseClient.auth.signOut();
+                    }
+                });
             } else {
                 container.innerHTML = `
                     <button onclick="window.location.href='login.html'" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
@@ -322,11 +333,22 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileDrawerContainers.forEach(container => {
             if (isAuth) {
                 container.innerHTML = `
-                    <button onclick="toggleMobileMenu(false); setTimeout(window.openAccountDrawer, 350)" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps w-full max-w-[200px]">
-                        <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                        My Account
-                    </button>
+                    <div class="flex flex-col gap-3 w-full max-w-[200px] items-center">
+                        <button onclick="toggleMobileMenu(false); setTimeout(window.openAccountDrawer, 350)" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps w-full">
+                            <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                            My Account
+                        </button>
+                        <button id="mobile-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-6 py-2.5 rounded font-label-caps text-label-caps w-full bg-transparent">
+                            Logout
+                        </button>
+                    </div>
                 `;
+                container.querySelector('#mobile-logout-btn')?.addEventListener('click', async () => {
+                    if (window.supabaseClient) {
+                        toggleMobileMenu(false);
+                        await window.supabaseClient.auth.signOut();
+                    }
+                });
             } else {
                 container.innerHTML = `
                     <button onclick="toggleMobileMenu(false); setTimeout(() => { window.location.href='login.html'; }, 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
@@ -831,4 +853,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.head.appendChild(styleElement);
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAuthSystem);
+} else {
+    initializeAuthSystem();
+}
