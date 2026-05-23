@@ -1,5 +1,5 @@
 // =====================================================================
-// ARTISAN ROAST - AUTHENTICATION & DATABASE CONTROLLER
+// NESCAFÉ ROAST - AUTHENTICATION & DATABASE CONTROLLER
 // =====================================================================
 // This script manages authentication state, database operations, and
 // dynamically renders the beautiful glassmorphic Auth Modal and Account Drawer.
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             formRegister?.classList.remove('hidden');
             formLogin?.classList.add('hidden');
-            if (modalTitle) modalTitle.textContent = "Join the Artisan Guild";
+            if (modalTitle) modalTitle.textContent = "Join the Nescafe Guild";
         }
     }
 
@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="auth-modal-alert" class="hidden text-center p-3 mb-6 border border-tertiary/20 rounded bg-primary-container/20 text-tertiary text-xs leading-relaxed">
                 </div>
 
-                <div class="font-label-caps text-label-caps text-tertiary mb-2 tracking-[0.2em]">ARTISAN GUILD</div>
+                <div class="font-label-caps text-label-caps text-tertiary mb-2 tracking-[0.2em]">NESCAFÉ GUILD</div>
                 <h3 id="auth-modal-title" class="font-headline-sm text-2xl text-on-background mb-6">Sign In to Your Cellar</h3>
                 
                 <!-- Tab Headers -->
@@ -683,7 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4 class="font-headline-sm text-base">Backend Connection</h4>
                 </div>
                 <p class="font-body-md text-xs text-on-surface-variant/80 leading-relaxed mb-4">
-                    Artisan Roast connects with your Supabase Postgres Database! Please enter your database access parameters below.
+                    Nescafe Roast connects with your Supabase Postgres Database! Please enter your database access parameters below.
                 </p>
                 <form id="setup-console-form" class="space-y-4">
                     <div>

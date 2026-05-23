@@ -1,5 +1,5 @@
 // =====================================================================
-// ARTISAN ROAST - SUPABASE CONFIGURATION
+// NESCAFÉ ROAST - SUPABASE CONFIGURATION
 // =====================================================================
 // You can hardcode your Supabase URL and Anon Key here, or use the 
 // built-in interactive setup dashboard on the webpage to paste them safely.
@@ -12,7 +12,7 @@ function safeGetItem(key) {
     try {
         return localStorage.getItem(key);
     } catch (error) {
-        console.warn("☕ Artisan Config: Local storage read restricted. Falling back.", error);
+        console.warn("☕ Nescafe Config: Local storage read restricted. Falling back.", error);
         return null;
     }
 }
@@ -22,7 +22,7 @@ function safeSetItem(key, value) {
         localStorage.setItem(key, value);
         return true;
     } catch (error) {
-        console.warn("☕ Artisan Config: Local storage write restricted.", error);
+        console.warn("☕ Nescafe Config: Local storage write restricted.", error);
         return false;
     }
 }
@@ -32,7 +32,7 @@ function safeRemoveItem(key) {
         localStorage.removeItem(key);
         return true;
     } catch (error) {
-        console.warn("☕ Artisan Config: Local storage deletion restricted.", error);
+        console.warn("☕ Nescafe Config: Local storage deletion restricted.", error);
         return false;
     }
 }
@@ -84,7 +84,7 @@ if (isConfigured && globalSupabase) {
             localStorage.removeItem("sb_persistence_test");
             storageEngine = localStorage;
         } catch (storageError) {
-            console.log("ℹ️ Artisan Roast: Local storage is sandboxed. Loading in-memory session vault.");
+            console.log("ℹ️ Nescafe Roast: Local storage is sandboxed. Loading in-memory session vault.");
             window.sb_memory_vault = window.sb_memory_vault || {};
             storageEngine = {
                 getItem: (k) => window.sb_memory_vault[k] || null,
@@ -100,15 +100,15 @@ if (isConfigured && globalSupabase) {
                 storage: storageEngine
             }
         });
-        console.log("☕ Artisan Roast Backend: Supabase initialized successfully.");
+        console.log("☕ Nescafe Roast Backend: Supabase initialized successfully.");
     } catch (error) {
-        console.error("❌ Artisan Roast Backend: Failed to initialize Supabase client.", error);
+        console.error("❌ Nescafe Roast Backend: Failed to initialize Supabase client.", error);
     }
 } else {
     if (!isConfigured) {
-        console.log("ℹ️ Artisan Roast Backend: Supabase is waiting for connection parameters. Open the Account Panel to configure.");
+        console.log("ℹ️ Nescafe Roast Backend: Supabase is waiting for connection parameters. Open the Account Panel to configure.");
     } else if (!globalSupabase) {
-        console.warn("⚠️ Artisan Roast Backend: Supabase SDK script has not finished loading.");
+        console.warn("⚠️ Nescafe Roast Backend: Supabase SDK script has not finished loading.");
     }
 }
 

@@ -1,5 +1,5 @@
 -- =====================================================================
--- ARTISAN ROAST - SUPABASE BACKEND SCHEMA
+-- NESCAFÉ ROAST - SUPABASE BACKEND SCHEMA
 -- =====================================================================
 -- Run this script in your Supabase SQL Editor (https://supabase.com)
 -- to initialize tables, row-level security, and authentication triggers.
@@ -56,7 +56,7 @@ BEGIN
     INSERT INTO public.profiles (id, full_name, updated_at)
     VALUES (
         new.id,
-        COALESCE(new.raw_user_meta_data->>'full_name', 'Artisan Connoisseur'),
+        COALESCE(new.raw_user_meta_data->>'full_name', 'Nescafe Connoisseur'),
         now()
     );
     RETURN NEW;
