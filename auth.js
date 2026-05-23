@@ -5,6 +5,9 @@
 // dynamically renders the beautiful glassmorphic Auth Modal and Account Drawer.
 
 function initializeAuthSystem() {
+    // Check if we are on the dedicated login page to avoid rendering duplicate elements
+    const isLoginPage = window.location.pathname.includes('login.html') || window.location.href.includes('login.html');
+
     // 1. DYNAMICALLY INJECT CSS STYLES FOR AUTH & DRAWER
     injectAuthStyles();
 
@@ -12,10 +15,12 @@ function initializeAuthSystem() {
     let currentUser = null;
     let userProfile = null;
 
-    // 3. RENDER THE INTERACTIVE MODALS AND DRAWERS ONTO THE PAGE
-    renderAuthModal();
-    renderAccountDrawer();
-    renderHeaderControls();
+    // 3. RENDER THE INTERACTIVE MODALS AND DRAWERS ONTO THE PAGE (Skip on dedicated login page)
+    if (!isLoginPage) {
+        renderAuthModal();
+        renderAccountDrawer();
+        renderHeaderControls();
+    }
 
     // 4. BIND EVENT LISTENERS FOR MODALS
     bindAuthEvents();
