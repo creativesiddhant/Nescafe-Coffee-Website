@@ -340,11 +340,12 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <button onclick="window.openAuthModal('login')" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
+                    <a href="login.html" onclick="if(window.openAuthModal){window.openAuthModal('login'); return false;}" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 text-center inline-block cursor-pointer">
                         Sign In
-                    </button>
+                    </a>
                 `;
             }
+
         });
 
         // Inject standard mobile drawer triggers
@@ -369,9 +370,9 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <button onclick="toggleMobileMenu(false); setTimeout(() => { window.openAuthModal('login'); }, 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
+                    <a href="login.html" onclick="if(window.toggleMobileMenu){toggleMobileMenu(false);} if(window.openAuthModal){setTimeout(() => { window.openAuthModal('login'); }, 350); return false;}" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px] text-center inline-block cursor-pointer">
                         Sign In
-                    </button>
+                    </a>
                 `;
             }
         });
