@@ -449,6 +449,51 @@ function initializeAuthSystem() {
             submitBtn.disabled = true;
             submitBtn.textContent = "Registering...";
 
+            // Dynamically show success screen inside the modal or card
+            function showSuccessScreen(title, message, autoRedirect = false) {
+                const container = e.target.closest('.glass-panel') || document.body;
+                
+                // Hide forms, titles, tab headers, alerts
+                container.querySelectorAll('form, .grid, h3, #auth-modal-alert').forEach(el => {
+                    el.classList.add('hidden');
+                });
+                
+                let successStage = container.querySelector('#auth-stage-success');
+                if (!successStage) {
+                    successStage = document.createElement('div');
+                    successStage.id = "auth-stage-success";
+                    successStage.className = "flex flex-col items-center text-center py-6 fade-in-up w-full";
+                    container.appendChild(successStage);
+                } else {
+                    successStage.classList.remove('hidden');
+                }
+                
+                successStage.innerHTML = `
+                    <div class="w-20 h-20 rounded-full bg-primary-container/40 border border-tertiary flex items-center justify-center text-tertiary mb-6 float-anim">
+                        <span class="material-symbols-outlined text-5xl">verified</span>
+                    </div>
+                    <h3 class="font-headline-sm text-2xl text-on-background mb-3">${title}</h3>
+                    <p class="font-body-md text-sm text-on-surface-variant max-w-sm mb-6 leading-relaxed">
+                        ${message}
+                    </p>
+                    <button type="button" onclick="window.location.href='index.html'" class="border border-outline-variant/50 text-on-background hover:border-tertiary hover:text-tertiary px-8 py-3 rounded font-label-caps transition-colors uppercase text-xs tracking-wider focus:outline-none">
+                        Return Home
+                    </button>
+                `;
+                
+                // Trigger transition
+                setTimeout(() => {
+                    successStage.classList.add('visible');
+                    successStage.classList.remove('opacity-0', 'translate-y-8');
+                }, 50);
+
+                if (autoRedirect) {
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2500);
+                }
+            }
+
             try {
                 const { data, error } = await supabase.auth.signUp({
                     email,
@@ -464,32 +509,24 @@ function initializeAuthSystem() {
 
                 // Check if email confirmation is required
                 if (data.user && data.session === null) {
-                    if (errEl) {
-                        errEl.innerHTML = `
-                            <strong>Registration pending verification!</strong><br/>
-                            An activation link has been sent to your email inbox. Please click the link to confirm your account.<br/>
-                            <div class="mt-2 pt-2 border-t border-tertiary/10 text-[10px] opacity-90">
-                                💡 <em>Note: You can turn off email confirmation in your <strong>Supabase Dashboard > Authentication > Providers > Email</strong> to register instantly without email checks!</em>
-                            </div>
-                        `;
-                        errEl.classList.remove('hidden');
-                        errEl.className = "p-4 border border-tertiary/20 rounded bg-primary-container/20 text-tertiary text-xs leading-relaxed text-left";
-                    }
-                    submitBtn.textContent = "Awaiting Confirmation";
+                    showSuccessScreen(
+                        "Guild Enrollment Secured",
+                        "Your connoisseur account has been successfully created! A verification link has been sent to your email inbox. Please click the link to confirm your account and access your cellar."
+                    );
                 } else {
-                    // Sign up logged in immediately
-                    if (window.location.pathname.includes('login.html') || window.location.href.includes('login.html')) {
-                        window.location.href = 'index.html';
-                    } else {
-                        window.closeAuthModal();
-                    }
+                    showSuccessScreen(
+                        "Welcome to the Guild!",
+                        "Your account has been successfully created and you are now logged in! Redirecting to home...",
+                        true
+                    );
                 }
             } catch (err) {
                 console.error("Sign up error:", err);
+                alert(`Sign Up failed: ${err.message}`);
                 if (errEl) {
                     let errMsg = err.message || "An unexpected error occurred.";
                     if (errMsg.toLowerCase().includes("failed to fetch")) {
-                        errMsg = "<strong>Network Connection Blocked:</strong><br/>Failed to connect to Supabase. If you have an ad-blocker active (e.g. uBlock Origin or Brave Shield), please disable it for this local site since it may block third-party database API calls.";
+                        errMsg = "<strong>Network Connection Blocked:</strong><br/>Failed to connect to Supabase. If you have an ad-blocker active, please disable it.";
                         errEl.className = "p-4 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs leading-relaxed text-left";
                     }
                     errEl.innerHTML = errMsg;

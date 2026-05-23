@@ -191,9 +191,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         function openReservationModal(defaultBlend) {
-            // Reset input values
-            if (nameInput) nameInput.value = '';
-            if (emailInput) emailInput.value = '';
+            // Pre-populate details if user is authenticated
+            const authState = window.checkUserAuth ? window.checkUserAuth() : { isAuthenticated: false };
+            if (authState.isAuthenticated) {
+                if (nameInput) nameInput.value = authState.profile?.full_name || authState.user?.user_metadata?.full_name || '';
+                if (emailInput) emailInput.value = authState.user?.email || '';
+            } else {
+                if (nameInput) nameInput.value = '';
+                if (emailInput) emailInput.value = '';
+            }
             
             // Set default quantity
             quantity = 1;
@@ -226,68 +232,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         async function submitReservationForm() {
-            const confirmId = document.getElementById('confirm-id');
-            const confirmBlend = document.getElementById('confirm-blend');
-            const confirmQty = document.getElementById('confirm-qty');
-            const confirmTotal = document.getElementById('confirm-total');
-            
-            const pricePerBag = prices[selectedBlend] || 24.00;
-            const totalPrice = pricePerBag * quantity;
+            try {
+                const confirmId = document.getElementById('confirm-id');
+                const confirmBlend = document.getElementById('confirm-blend');
+                const confirmQty = document.getElementById('confirm-qty');
+                const confirmTotal = document.getElementById('confirm-total');
+                
+                const pricePerBag = prices[selectedBlend] || 24.00;
+                const totalPrice = pricePerBag * quantity;
 
-            // Check database connectivity and login state from auth.js
-            const authState = window.checkUserAuth ? window.checkUserAuth() : { isAuthenticated: false };
-            const isDbConfigured = window.supabaseConfig ? window.supabaseConfig.isConfigured : false;
+                // Check database connectivity and login state from auth.js
+                const authState = window.checkUserAuth ? window.checkUserAuth() : { isAuthenticated: false };
+                const isDbConfigured = window.supabaseConfig ? window.supabaseConfig.isConfigured : false;
 
-            if (isDbConfigured) {
-                if (!authState.isAuthenticated) {
-                    // Close reservation modal and open auth modal with customized alert
-                    closeReservationModal();
-                    setTimeout(() => {
-                        window.openAuthModal('register', 'Secure Your Allocation: An account is required to lock in your premium batch and track roasting status.');
-                    }, 350);
-                    return;
-                }
+                if (isDbConfigured) {
+                    if (!authState.isAuthenticated) {
+                        // Close reservation modal and open auth modal with customized alert
+                        closeReservationModal();
+                        setTimeout(() => {
+                            window.openAuthModal('register', 'Secure Your Allocation: An account is required to lock in your premium batch and track roasting status.');
+                        }, 350);
+                        return;
+                    }
 
-                // Show spinner/progress on reservation submit button
-                const submitBtn = document.querySelector('#reservation-form button[type="submit"]');
-                const originalText = submitBtn ? submitBtn.textContent : "Confirm Reservation";
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = "Securing batch...";
-                }
+                    // Show spinner/progress on reservation submit button
+                    const submitBtn = document.querySelector('#reservation-form button[type="submit"]');
+                    const originalText = submitBtn ? submitBtn.textContent : "Confirm Reservation";
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = "Securing batch...";
+                    }
 
-                // Submit to real Supabase database
-                const result = await window.submitAuthenticatedReservation(selectedBlend, quantity, totalPrice);
+                    // Submit to real Supabase database
+                    console.log("☕ Submitting reservation...", { selectedBlend, quantity, totalPrice });
+                    const result = await window.submitAuthenticatedReservation(selectedBlend, quantity, totalPrice);
+                    console.log("☕ Reservation result:", result);
 
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = originalText;
-                }
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
 
-                if (result && result.success) {
-                    // Display receipt details
-                    const shortId = `#AR-${result.id.slice(0, 5).toUpperCase()}`;
-                    if (confirmId) confirmId.textContent = shortId;
+                    if (result && result.success) {
+                        // Display receipt details
+                        const shortId = `#AR-${result.id.slice(0, 5).toUpperCase()}`;
+                        if (confirmId) confirmId.textContent = shortId;
+                        if (confirmBlend) confirmBlend.textContent = blendNames[selectedBlend];
+                        if (confirmQty) confirmQty.textContent = `${quantity} ${quantity === 1 ? 'Bag' : 'Bags'}`;
+                        if (confirmTotal) confirmTotal.textContent = `$${totalPrice.toFixed(2)}`;
+                        
+                        if (modalStageForm) modalStageForm.classList.add('hidden');
+                        if (modalStageSuccess) modalStageSuccess.classList.remove('hidden');
+                    } else if (result && !result.success && !result.pending) {
+                        alert(`Reservation failed: ${result.error}`);
+                    }
+                } else {
+                    // Fallback for unconfigured database (pure offline mock mode)
+                    const randomId = `#AR-${Math.floor(10000 + Math.random() * 90000)}`;
+                    if (confirmId) confirmId.textContent = randomId;
                     if (confirmBlend) confirmBlend.textContent = blendNames[selectedBlend];
                     if (confirmQty) confirmQty.textContent = `${quantity} ${quantity === 1 ? 'Bag' : 'Bags'}`;
                     if (confirmTotal) confirmTotal.textContent = `$${totalPrice.toFixed(2)}`;
                     
                     if (modalStageForm) modalStageForm.classList.add('hidden');
                     if (modalStageSuccess) modalStageSuccess.classList.remove('hidden');
-                } else if (result && !result.success && !result.pending) {
-                    alert(`Reservation failed: ${result.error}`);
+                    console.log("Offline Fallback: Database connection not initialized. Created reservation locally.");
                 }
-            } else {
-                // Fallback for unconfigured database (pure offline mock mode)
-                const randomId = `#AR-${Math.floor(10000 + Math.random() * 90000)}`;
-                if (confirmId) confirmId.textContent = randomId;
-                if (confirmBlend) confirmBlend.textContent = blendNames[selectedBlend];
-                if (confirmQty) confirmQty.textContent = `${quantity} ${quantity === 1 ? 'Bag' : 'Bags'}`;
-                if (confirmTotal) confirmTotal.textContent = `$${totalPrice.toFixed(2)}`;
-                
-                if (modalStageForm) modalStageForm.classList.add('hidden');
-                if (modalStageSuccess) modalStageSuccess.classList.remove('hidden');
-                console.log("Offline Fallback: Database connection not initialized. Created reservation locally.");
+            } catch (err) {
+                console.error("Reservation submit exception:", err);
+                alert(`Error submitting reservation: ${err.message}`);
             }
         }
         
