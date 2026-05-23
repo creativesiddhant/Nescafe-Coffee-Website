@@ -6,7 +6,8 @@
 
 function initializeAuthSystem() {
     // Check if we are on the dedicated login page to avoid rendering duplicate elements
-    const isLoginPage = window.location.pathname.includes('login.html') || window.location.href.includes('login.html');
+    const isLoginPage = window.location.pathname.includes('login') || window.location.href.includes('login');
+
 
     // 1. DYNAMICALLY INJECT CSS STYLES FOR AUTH & DRAWER
     injectAuthStyles();
@@ -19,8 +20,9 @@ function initializeAuthSystem() {
     if (!isLoginPage) {
         renderAuthModal();
         renderAccountDrawer();
-        renderHeaderControls();
     }
+    renderHeaderControls();
+
 
     // 4. BIND EVENT LISTENERS FOR MODALS
     bindAuthEvents();
@@ -32,8 +34,8 @@ function initializeAuthSystem() {
             console.log(`☕ Auth State Change: ${event}`);
             if (session) {
                 currentUser = session.user;
-                // If on login.html, redirect home instantly
-                if (window.location.pathname.includes('login.html') || window.location.href.includes('login.html')) {
+                // If on login page, redirect home instantly
+                if (isLoginPage) {
                     window.location.href = 'index.html';
                     return;
                 }
@@ -50,7 +52,7 @@ function initializeAuthSystem() {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
                 currentUser = session.user;
-                if (window.location.pathname.includes('login.html') || window.location.href.includes('login.html')) {
+                if (isLoginPage) {
                     window.location.href = 'index.html';
                     return;
                 }
@@ -198,6 +200,12 @@ function initializeAuthSystem() {
             modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
             modal.classList.add('opacity-100', 'scale-100');
             window.lenis?.stop(); // lock scroll
+        } else if (isLoginPage) {
+            // We are on the dedicated login page - scroll smoothly to the login card
+            const mainCard = document.querySelector('main .glass-panel') || document.querySelector('main');
+            if (mainCard) {
+                mainCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
     };
 
@@ -570,7 +578,7 @@ function initializeAuthSystem() {
 
                 if (error) throw error;
                 
-                if (window.location.pathname.includes('login.html') || window.location.href.includes('login.html')) {
+                if (isLoginPage) {
                     window.location.href = 'index.html';
                 } else {
                     window.closeAuthModal();
