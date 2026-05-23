@@ -327,7 +327,7 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <button onclick="window.location.href='login.html'" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
+                    <button onclick="window.openAuthModal('login')" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
                         Sign In
                     </button>
                 `;
@@ -356,7 +356,7 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <button onclick="toggleMobileMenu(false); setTimeout(() => { window.location.href='login.html'; }, 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
+                    <button onclick="toggleMobileMenu(false); setTimeout(() => { window.openAuthModal('login'); }, 350)" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px]">
                         Sign In
                     </button>
                 `;
