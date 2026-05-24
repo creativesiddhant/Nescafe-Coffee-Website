@@ -88,8 +88,9 @@ if (isConfigured && globalSupabase) {
             
             const getVault = () => {
                 try {
-                    // Try to parse the window.name as JSON
-                    return JSON.parse(window.name || '{}');
+                    // Try to parse the window.name as JSON and ensure it is a plain object
+                    const parsed = JSON.parse(window.name || '{}');
+                    return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
                 } catch {
                     // If parsing fails, reset name and return empty
                     return {};

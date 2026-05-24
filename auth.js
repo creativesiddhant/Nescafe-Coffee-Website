@@ -84,6 +84,9 @@ function initializeAuthSystem() {
             } else {
                 updateHeaderAndDrawerState(false);
             }
+        }).catch(err => {
+            console.error("☕ auth.js getSession error:", err);
+            updateHeaderAndDrawerState(false);
         });
     } else {
         // If not configured, update UI to reflect unconfigured state
