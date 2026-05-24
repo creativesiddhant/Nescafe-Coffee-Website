@@ -406,8 +406,30 @@ function initializeAuthSystem() {
 
         // Update Account Drawer details
         if (isAuth) {
+            let emailWarningHtml = '';
+            if (currentUser && !currentUser.email_confirmed_at) {
+                emailWarningHtml = `
+                    <div class="glass-panel border border-amber-500/30 bg-amber-500/5 rounded-xl p-4 mb-4 flex flex-col gap-2.5 text-xs text-on-background">
+                        <div class="flex items-center gap-2 text-amber-400 font-semibold uppercase tracking-wider text-[10px]">
+                            <span class="material-symbols-outlined text-[16px] text-amber-400">warning</span>
+                            Email Verification Pending
+                        </div>
+                        <p class="text-on-surface-variant leading-relaxed">
+                            Please verify your email address to secure full guild privileges and unlock cellar logs. Check your inbox for the link.
+                        </p>
+                        <button id="resend-verification-btn" class="text-left text-tertiary hover:text-[#D4AF37] font-semibold underline focus:outline-none flex items-center gap-1 transition-all">
+                            Resend Verification Email
+                        </button>
+                        <div id="resend-success-msg" class="hidden text-emerald-400 font-semibold mt-1">
+                            Verification email sent! Please check your inbox.
+                        </div>
+                    </div>
+                `;
+            }
+
             if (drawerProfileSection) {
                 drawerProfileSection.innerHTML = `
+                    ${emailWarningHtml}
                     <div class="flex items-center gap-4 bg-surface-container-low/50 gold-border p-4 rounded-xl mb-6">
                         <div class="w-12 h-12 rounded-full bg-tertiary/20 text-tertiary border border-tertiary flex items-center justify-center font-headline-sm text-xl font-bold uppercase select-none">
                             ${userName.charAt(0)}
@@ -419,6 +441,32 @@ function initializeAuthSystem() {
                     </div>
                 `;
                 drawerProfileSection.classList.remove('hidden');
+
+                // Bind click event to resend button
+                const resendBtn = drawerProfileSection.querySelector('#resend-verification-btn');
+                if (resendBtn) {
+                    resendBtn.addEventListener('click', async () => {
+                        resendBtn.disabled = true;
+                        resendBtn.textContent = "Sending link...";
+                        try {
+                            const { error } = await supabase.auth.resend({
+                                type: 'signup',
+                                email: currentUser.email,
+                                options: {
+                                    emailRedirectTo: window.location.origin + window.location.pathname
+                                }
+                            });
+                            if (error) throw error;
+                            resendBtn.classList.add('hidden');
+                            const successEl = drawerProfileSection.querySelector('#resend-success-msg');
+                            if (successEl) successEl.classList.remove('hidden');
+                        } catch (err) {
+                            console.error("Resend error:", err);
+                            resendBtn.disabled = false;
+                            resendBtn.textContent = "Failed to resend. Try again.";
+                        }
+                    });
+                }
             }
             if (drawerReservationsSection) drawerReservationsSection.classList.remove('hidden');
             if (drawerAuthPrompt) drawerAuthPrompt.classList.add('hidden');
@@ -613,7 +661,8 @@ function initializeAuthSystem() {
                     options: {
                         data: {
                             full_name: fullName
-                        }
+                        },
+                        emailRedirectTo: window.location.origin + window.location.pathname
                     }
                 });
                 console.log("☕ supabase.auth.signUp finished. Data:", data, "Error:", error);

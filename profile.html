@@ -228,6 +228,9 @@
 
         <!-- AUTHENTICATED DASHBOARD (Hidden by default) -->
         <div id="vault-dashboard" class="hidden w-full space-y-8 animate-fade-in">
+            <!-- Email Verification Pending Warning Banner -->
+            <div id="email-verification-warning" class="hidden"></div>
+
             <!-- Dynamic Welcome Banner -->
             <div class="glass-panel gold-border p-8 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-surface-container-low/40 backdrop-blur-2xl relative overflow-hidden">
                 <div class="absolute -right-16 -top-16 w-48 h-48 bg-[#C68642]/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -499,6 +502,62 @@
             loader.classList.add('hidden');
             gate.classList.add('hidden');
             dash.classList.remove('hidden');
+
+            // Check email verification status
+            const warningEl = document.getElementById('email-verification-warning');
+            if (warningEl) {
+                if (currentUser && !currentUser.email_confirmed_at) {
+                    warningEl.innerHTML = `
+                        <div class="glass-panel border border-amber-500/30 bg-amber-500/5 rounded-xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-sm text-on-background">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-wider text-[11px] mb-1">
+                                    <span class="material-symbols-outlined text-[18px]">warning</span>
+                                    Email Verification Pending
+                                </div>
+                                <p class="text-on-surface-variant text-xs sm:text-sm leading-relaxed max-w-2xl">
+                                    Please verify your email address to secure your guild privileges. Accessing cellar databases requires confirmation. Check your inbox for the validation link.
+                                </p>
+                            </div>
+                            <div class="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+                                <button id="resend-dash-verification-btn" class="border border-amber-500/30 hover:border-amber-400 text-amber-400 px-4 py-2 rounded font-label-caps text-xs tracking-wider uppercase transition-colors bg-transparent font-bold w-full sm:w-auto focus:outline-none">
+                                    Resend Validation Link
+                                </button>
+                                <span id="resend-dash-success-msg" class="hidden text-emerald-400 font-semibold text-xs text-right">
+                                    Link sent! Check your inbox.
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    warningEl.classList.remove('hidden');
+                    
+                    const resendBtn = document.getElementById('resend-dash-verification-btn');
+                    if (resendBtn) {
+                        resendBtn.addEventListener('click', async () => {
+                            resendBtn.disabled = true;
+                            resendBtn.textContent = "Sending...";
+                            try {
+                                const { error } = await supabase.auth.resend({
+                                    type: 'signup',
+                                    email: currentUser.email,
+                                    options: {
+                                        emailRedirectTo: window.location.origin + window.location.pathname
+                                    }
+                                });
+                                if (error) throw error;
+                                resendBtn.classList.add('hidden');
+                                const successEl = document.getElementById('resend-dash-success-msg');
+                                if (successEl) successEl.classList.remove('hidden');
+                            } catch (err) {
+                                console.error("Resend error:", err);
+                                resendBtn.disabled = false;
+                                resendBtn.textContent = "Failed. Try again.";
+                            }
+                        });
+                    }
+                } else {
+                    warningEl.classList.add('hidden');
+                }
+            }
 
             console.log("☕ Profile: Performing background synchronization for", currentUser.email);
 
