@@ -117,6 +117,39 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Lenis Smooth Scroll CSS -->
     <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+    
+    <!-- Instant Header Bootstrapper (Flicker-Free Sign In / Logout Swapper) -->
+    <script id="header-bootstrap">
+        (function() {
+            let hasSession = false;
+            try {
+                hasSession = !!localStorage.getItem("sb-pjpsfxqblrazjschnisu-auth-token");
+            } catch (e) {
+                try {
+                    const vault = JSON.parse(window.name || '{}');
+                    hasSession = !!vault["sb-pjpsfxqblrazjschnisu-auth-token"];
+                } catch (err) {}
+            }
+            if (hasSession) {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const containers = document.querySelectorAll('.auth-header-container');
+                    containers.forEach(container => {
+                        container.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <a href="profile.html" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
+                                    <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                                    My Vault
+                                </a>
+                                <button id="instant-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300 bg-transparent" onclick="if(window.supabaseClient){window.supabaseClient.auth.signOut();}else{try{localStorage.removeItem('sb-pjpsfxqblrazjschnisu-auth-token');}catch(e){}try{const v=JSON.parse(window.name||'{}');delete v['sb-pjpsfxqblrazjschnisu-auth-token'];window.name=JSON.stringify(v);}catch(e){}location.reload();}">
+                                    Logout
+                                </button>
+                            </div>
+                        `;
+                    });
+                });
+            }
+        })();
+    </script>
 </head>
 <body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
 
@@ -128,7 +161,7 @@
         
         <div class="flex items-center gap-6">
             <div class="auth-header-container flex items-center h-full">
-                <a href="login.html" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 text-center inline-block cursor-pointer">
+                <a href="profile.html" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 text-center inline-block cursor-pointer">
                     Sign In
                 </a>
             </div>
