@@ -496,8 +496,12 @@
                 return;
             }
 
+            // Flag to prevent redundant simultaneous loads
+            let isProfileLoading = false;
+
             // Sync auth state realtime
             supabase.auth.onAuthStateChange(async (event, session) => {
+                console.log("☕ Profile Auth Event:", event);
                 if (session) {
                     currentUser = session.user;
                     loader.classList.remove('hidden');
@@ -518,7 +522,14 @@
             supabase.auth.getSession().then(async ({ data: { session } }) => {
                 if (session) {
                     currentUser = session.user;
-                    await loadUserProfile();
+                    // loadUserProfile is handled by onAuthStateChange's INITIAL_SESSION event.
+                    // We only call it here if it wasn't triggered to ensure a backup.
+                    setTimeout(async () => {
+                        if (!isProfileLoading && !document.getElementById('dash-email').textContent.includes(currentUser.email)) {
+                            console.log("☕ Profile Backup Check: Initializing loading sequence.");
+                            await loadUserProfile();
+                        }
+                    }, 200);
                 } else {
                     loader.classList.add('hidden');
                     gate.classList.remove('hidden');
@@ -527,16 +538,22 @@
             });
 
             async function loadUserProfile() {
-                if (!currentUser) return;
-
+                if (!currentUser || isProfileLoading) return;
+                isProfileLoading = true;
+                
+                console.log("☕ Profile Load Profile: Initiating loading sequence.");
+                
                 try {
                     // 1. Load profiles details
-                    const { data: profile, error } = await supabase
+                    const { data: profile, error: profileErr } = await supabase
                         .from('profiles')
                         .select('*')
                         .eq('id', currentUser.id)
                         .single();
 
+                    if (profileErr) {
+                        console.warn("☕ Profile Page Fetch Warning (non-fatal):", profileErr);
+                    }
                     if (profile) {
                         userProfile = profile;
                     }
@@ -550,12 +567,15 @@
                     document.getElementById('dash-email').textContent = userEmail;
                     document.getElementById('dash-welcome-title').textContent = `Welcome to your Cellar, ${userName.split(' ')[0]}`;
                     
-                    // Parse date
-                    const createdDate = new Date(currentUser.created_at).toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric'
-                    });
+                    // Parse date safely
+                    let createdDate = 'Recent Join';
+                    if (currentUser.created_at) {
+                        createdDate = new Date(currentUser.created_at).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                    }
                     document.getElementById('dash-member-since').textContent = createdDate;
 
                     // 3. Load allocations
@@ -565,14 +585,16 @@
                     loader.classList.add('hidden');
                     dash.classList.remove('hidden');
                 } catch (err) {
-                    console.error("Dashboard fetch error:", err);
+                    console.error("❌ Critical Dashboard fetch error:", err);
                     loader.innerHTML = `
                         <div class="text-center p-6 border border-error/20 rounded bg-error-container/20 text-on-error-container max-w-sm mx-auto">
                             <p class="font-headline-sm text-base mb-1">Failed to Open Vault</p>
-                            <p class="font-body-md text-xs opacity-80 mb-4">${err.message}</p>
+                            <p class="font-body-md text-xs opacity-80 mb-4">${err.message || err}</p>
                             <button onclick="location.reload()" class="border border-[#fff]/20 text-white px-4 py-2 text-xs font-label-caps uppercase rounded">Retry Connection</button>
                         </div>
                     `;
+                } finally {
+                    isProfileLoading = false;
                 }
             }
 
