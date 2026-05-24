@@ -10,7 +10,7 @@ function initializeAuthSystem() {
         const path = window.location.pathname.toLowerCase();
         const segments = path.split('/').filter(Boolean);
         const lastSegment = segments[segments.length - 1] || '';
-        return lastSegment === 'login' || lastSegment === 'login.html';
+        return lastSegment === 'login' || lastSegment === 'login.html' || lastSegment === 'profile' || lastSegment === 'profile.html';
     })();
 
 
@@ -45,6 +45,12 @@ function initializeAuthSystem() {
                 currentUser = null;
                 userProfile = null;
                 updateHeaderAndDrawerState(false);
+                
+                // Redirect to index.html if we are on the profile page
+                const path = window.location.pathname.toLowerCase();
+                if (path.endsWith('profile.html') || path.endsWith('profile')) {
+                    window.location.href = 'index.html';
+                }
             }
         });
 
@@ -181,7 +187,7 @@ function initializeAuthSystem() {
 
     // 7. PUBLIC INTERFACES EXPOSED TO CLIENT CODE
     window.openAuthModal = function(defaultTab = 'login', customAlertText = '') {
-        window.location.href = 'login.html';
+        window.location.href = 'profile.html';
     };
 
     window.closeAuthModal = function() {
@@ -228,7 +234,7 @@ function initializeAuthSystem() {
             // Close reservation modal and redirect to login page
             window.closeReservationModal?.();
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = 'profile.html';
             }, 350);
             return { success: false, pending: true };
         }
@@ -288,10 +294,10 @@ function initializeAuthSystem() {
             if (isAuth) {
                 container.innerHTML = `
                     <div class="flex items-center gap-3">
-                        <button onclick="window.openAccountDrawer()" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
+                        <a href="profile.html" class="flex items-center gap-2 border border-outline-variant/40 hover:border-tertiary text-on-surface-variant hover:text-tertiary px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300">
                             <span class="material-symbols-outlined text-[18px]">account_circle</span>
                             ${userName.split(' ')[0]}
-                        </button>
+                        </a>
                         <button id="header-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-4 py-2 rounded font-label-caps text-label-caps transition-all duration-300 bg-transparent">
                             Logout
                         </button>
@@ -305,7 +311,7 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <a href="login.html" onclick="if(window.openAuthModal){window.openAuthModal('login'); return false;}" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 text-center inline-block cursor-pointer">
+                    <a href="profile.html" class="border border-tertiary text-tertiary px-5 py-2 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 text-center inline-block cursor-pointer">
                         Sign In
                     </a>
                 `;
@@ -318,11 +324,11 @@ function initializeAuthSystem() {
             if (isAuth) {
                 container.innerHTML = `
                     <div class="flex flex-col gap-3 w-full max-w-[200px] items-center">
-                        <button onclick="toggleMobileMenu(false); setTimeout(window.openAccountDrawer, 350)" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps w-full">
+                        <a href="profile.html" onclick="toggleMobileMenu(false);" class="flex items-center justify-center gap-2 border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-label-caps w-full text-center">
                             <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                            My Account
-                        </button>
-                        <button id="mobile-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-6 py-2.5 rounded font-label-caps text-label-caps w-full bg-transparent">
+                            My Vault
+                        </a>
+                        <button id="mobile-logout-btn" class="border border-outline-variant/30 hover:border-error text-on-surface-variant hover:text-error px-6 py-2.5 rounded font-label-caps text-label-caps w-full bg-transparent font-bold">
                             Logout
                         </button>
                     </div>
@@ -335,7 +341,7 @@ function initializeAuthSystem() {
                 });
             } else {
                 container.innerHTML = `
-                    <a href="login.html" onclick="if(window.toggleMobileMenu){toggleMobileMenu(false);} if(window.openAuthModal){setTimeout(() => { window.openAuthModal('login'); }, 350); return false;}" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px] text-center inline-block cursor-pointer">
+                    <a href="profile.html" onclick="if(window.toggleMobileMenu){toggleMobileMenu(false);}" class="border border-tertiary text-tertiary px-8 py-2.5 rounded font-label-caps text-label-caps hover:bg-tertiary hover:text-on-tertiary transition-all duration-300 w-full max-w-[200px] text-center inline-block cursor-pointer">
                         Sign In
                     </a>
                 `;
@@ -396,6 +402,66 @@ function initializeAuthSystem() {
         }
     }
 
+    // Dynamic emerald checkmark success overlay
+    function showGreenSuccessCheck(container, title, message, redirectUrl = null) {
+        if (!container) return;
+        
+        // Hide forms, titles, tab headers, alerts, setup cards inside this container
+        container.querySelectorAll('form, .grid, h3, #auth-modal-alert, .auth-hide-on-success').forEach(el => {
+            el.classList.add('hidden');
+        });
+        
+        let successStage = container.querySelector('#auth-stage-success');
+        if (!successStage) {
+            successStage = document.createElement('div');
+            successStage.id = "auth-stage-success";
+            successStage.className = "flex flex-col items-center text-center py-6 w-full opacity-0 translate-y-4 transition-all duration-500 ease-out";
+            container.appendChild(successStage);
+        } else {
+            successStage.classList.remove('hidden');
+            successStage.classList.add('opacity-0', 'translate-y-4');
+        }
+        
+        successStage.innerHTML = `
+            <div class="relative w-24 h-24 mb-6">
+                <!-- Outer Pulsing Glow -->
+                <div class="absolute inset-0 rounded-full bg-emerald-500/10 border border-emerald-500/30 animate-ping opacity-75"></div>
+                <!-- Inner Circular Background and SVG Check -->
+                <div class="absolute inset-2 rounded-full bg-emerald-950/80 border border-emerald-500/50 flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
+                    <svg class="w-12 h-12 text-emerald-400 stroke-current stroke-[3px] fill-none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" class="checkmark-path" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="font-headline-sm text-2xl text-on-background font-bold tracking-wide mb-2">${title}</h3>
+            <p class="font-body-md text-sm text-on-surface-variant max-w-sm mb-6 leading-relaxed">
+                ${message}
+            </p>
+            ${redirectUrl ? `
+                <div class="flex items-center gap-2 text-emerald-400/80 text-[11px] font-mono tracking-widest uppercase animate-pulse">
+                    <span class="animate-spin rounded-full h-3.5 w-3.5 border-2 border-emerald-400 border-t-transparent"></span>
+                    Unlocking vault...
+                </div>
+            ` : `
+                <button type="button" onclick="window.location.href='index.html'" class="border border-outline-variant/50 text-on-background hover:border-emerald-500 hover:text-emerald-400 px-8 py-3 rounded font-label-caps transition-colors uppercase text-xs tracking-wider focus:outline-none">
+                    Return Home
+                </button>
+            `}
+        `;
+        
+        // Trigger transition
+        setTimeout(() => {
+            successStage.classList.remove('opacity-0', 'translate-y-4');
+            successStage.classList.add('opacity-100', 'translate-y-0');
+        }, 50);
+
+        if (redirectUrl) {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000);
+        }
+    }
+
     // 9. EVENT LISTENERS BINDING
     function bindAuthEvents() {
         // Tab click events
@@ -428,51 +494,6 @@ function initializeAuthSystem() {
             submitBtn.disabled = true;
             submitBtn.textContent = "Registering...";
 
-            // Dynamically show success screen inside the modal or card
-            function showSuccessScreen(title, message, autoRedirect = false) {
-                const container = e.target.closest('.glass-panel') || document.body;
-                
-                // Hide forms, titles, tab headers, alerts
-                container.querySelectorAll('form, .grid, h3, #auth-modal-alert').forEach(el => {
-                    el.classList.add('hidden');
-                });
-                
-                let successStage = container.querySelector('#auth-stage-success');
-                if (!successStage) {
-                    successStage = document.createElement('div');
-                    successStage.id = "auth-stage-success";
-                    successStage.className = "flex flex-col items-center text-center py-6 fade-in-up w-full";
-                    container.appendChild(successStage);
-                } else {
-                    successStage.classList.remove('hidden');
-                }
-                
-                successStage.innerHTML = `
-                    <div class="w-20 h-20 rounded-full bg-primary-container/40 border border-tertiary flex items-center justify-center text-tertiary mb-6 float-anim">
-                        <span class="material-symbols-outlined text-5xl">verified</span>
-                    </div>
-                    <h3 class="font-headline-sm text-2xl text-on-background mb-3">${title}</h3>
-                    <p class="font-body-md text-sm text-on-surface-variant max-w-sm mb-6 leading-relaxed">
-                        ${message}
-                    </p>
-                    <button type="button" onclick="window.location.href='index.html'" class="border border-outline-variant/50 text-on-background hover:border-tertiary hover:text-tertiary px-8 py-3 rounded font-label-caps transition-colors uppercase text-xs tracking-wider focus:outline-none">
-                        Return Home
-                    </button>
-                `;
-                
-                // Trigger transition
-                setTimeout(() => {
-                    successStage.classList.add('visible');
-                    successStage.classList.remove('opacity-0', 'translate-y-8');
-                }, 50);
-
-                if (autoRedirect) {
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2500);
-                }
-            }
-
             try {
                 const { data, error } = await supabase.auth.signUp({
                     email,
@@ -486,22 +507,26 @@ function initializeAuthSystem() {
 
                 if (error) throw error;
 
+                const container = e.target.closest('.glass-panel') || document.body;
+
                 // Check if email confirmation is required
                 if (data.user && data.session === null) {
-                    showSuccessScreen(
+                    showGreenSuccessCheck(
+                        container,
                         "Guild Enrollment Secured",
-                        "Your connoisseur account has been successfully created! A verification link has been sent to your email inbox. Please click the link to confirm your account and access your cellar."
+                        "Your connoisseur account has been successfully created! A verification link has been sent to your email inbox. Please click the link to confirm your account and access your cellar.",
+                        null
                     );
                 } else {
-                    showSuccessScreen(
+                    showGreenSuccessCheck(
+                        container,
                         "Welcome to the Guild!",
-                        "Your account has been successfully created and you are now logged in! Redirecting to home...",
-                        true
+                        "Your account has been successfully created and you are now logged in! Opening your vault...",
+                        "profile.html"
                     );
                 }
             } catch (err) {
                 console.error("Sign up error:", err);
-                alert(`Sign Up failed: ${err.message}`);
                 if (errEl) {
                     let errMsg = err.message || "An unexpected error occurred.";
                     if (errMsg.toLowerCase().includes("failed to fetch")) {
@@ -549,11 +574,14 @@ function initializeAuthSystem() {
 
                 if (error) throw error;
                 
-                if (isLoginPage) {
-                    window.location.href = 'index.html';
-                } else {
-                    window.closeAuthModal();
-                }
+                const container = e.target.closest('.glass-panel') || document.body;
+                
+                showGreenSuccessCheck(
+                    container,
+                    "Access Granted",
+                    "Sign in successful. Unlocking your connoisseur vault...",
+                    "profile.html"
+                );
             } catch (err) {
                 console.error("Sign in error:", err);
                 if (errEl) {
@@ -781,7 +809,7 @@ function initializeAuthSystem() {
                 <p class="font-body-md text-xs text-on-surface-variant/80 max-w-[280px] leading-relaxed mb-6">
                     Sign in to secure premium coffee batches directly, view order histories, and manage allocations.
                 </p>
-                <a href="login.html" onclick="window.closeAccountDrawer()" class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-xs hover:bg-[#D4AF37] transition-all duration-300 font-bold uppercase tracking-wider text-center inline-block cursor-pointer">
+                <a href="profile.html" onclick="window.closeAccountDrawer()" class="bg-tertiary text-on-tertiary px-8 py-3 rounded font-label-caps text-xs hover:bg-[#D4AF37] transition-all duration-300 font-bold uppercase tracking-wider text-center inline-block cursor-pointer">
                     Sign In
                 </a>
             </div>
@@ -870,6 +898,21 @@ function initializeAuthSystem() {
             #drawer-overlay {
                 backdrop-filter: blur(4px);
                 -webkit-backdrop-filter: blur(4px);
+            }
+
+            /* Emerald Success Checkmark Animations */
+            @keyframes checkmark-draw {
+                from {
+                    stroke-dashoffset: 50;
+                }
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+            .checkmark-path {
+                stroke-dasharray: 50;
+                stroke-dashoffset: 50;
+                animation: checkmark-draw 0.6s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
             }
         `;
         document.head.appendChild(styleElement);

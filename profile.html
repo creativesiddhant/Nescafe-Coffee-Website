@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connoisseur Vault - NESCAFÉ ROAST</title>
+    <meta name="description" content="View your premium high-altitude coffee cellar allocations, manage your connoisseur details, and secure your roasting vault.">
+    
+    <!-- Tailwind CSS with Forms and Container Queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts: Playfair Display, DM Sans, Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet"/>
+    
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#352f2c",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#ffdbce",
+                        "on-background": "#ebe0db",
+                        "surface-dim": "#171210",
+                        "surface-variant": "#3a3430",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "background": "#171210",
+                        "on-primary-fixed-variant": "#5a4137",
+                        "on-error": "#690005",
+                        "primary-fixed-dim": "#e3bfb2",
+                        "secondary-fixed-dim": "#ffb870",
+                        "surface-container-lowest": "#120d0b",
+                        "on-primary-container": "#9e7e73",
+                        "surface": "#171210",
+                        "surface-container-low": "#201b18",
+                        "on-tertiary": "#3c2f00",
+                        "primary": "#e3bfb2",
+                        "on-secondary-fixed-variant": "#693c00",
+                        "surface-container": "#241f1c",
+                        "inverse-primary": "#74584e",
+                        "secondary": "#ffb870",
+                        "outline": "#9c8e89",
+                        "on-surface": "#ebe0db",
+                        "inverse-surface": "#ebe0db",
+                        "tertiary": "#e9c349",
+                        "secondary-container": "#764400",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#ffe088",
+                        "on-secondary-container": "#fbb46b",
+                        "secondary-fixed": "#ffdcbe",
+                        "outline-variant": "#504440",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary-fixed": "#2c1600",
+                        "tertiary-container": "#cba72f",
+                        "on-secondary": "#4a2800",
+                        "surface-bright": "#3e3835",
+                        "surface-container-highest": "#3a3430",
+                        "surface-container-high": "#2e2926",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary-container": "#2c1810",
+                        "surface-tint": "#e3bfb2",
+                        "on-primary-fixed": "#2a170f",
+                        "on-surface-variant": "#d3c3be",
+                        "on-primary": "#422b22"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "section-gap": "120px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-lg": ["DM Sans"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["DM Sans"],
+                        "label-caps": ["DM Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["40px", { "lineHeight": "48px", "fontWeight": "600" }],
+                        "display-lg-mobile": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.03em", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lenis Smooth Scroll CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+    
+    <style>
+        .profile-glow {
+            background: radial-gradient(circle at 50% 10%, rgba(233, 195, 73, 0.05) 0%, transparent 60%);
+        }
+        
+        /* Interactive draw checkmark */
+        @keyframes checkmark-draw {
+            from {
+                stroke-dashoffset: 50;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .checkmark-path {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: checkmark-draw 0.6s cubic-bezier(0.65, 0, 0.45, 1) 0.2s forwards;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary profile-glow min-h-screen flex flex-col">
+
+    <!-- Transparent Frosted Header -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/20 h-20 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+        <a href="index.html" class="font-headline-sm text-lg md:text-headline-sm tracking-[0.2em] text-tertiary cursor-pointer hover:opacity-85 transition-opacity">
+            NESCAFÉ ROAST
+        </a>
+        <nav class="hidden lg:flex gap-8">
+            <a href="index.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300">Home</a>
+            <a href="origin-stories.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300">Origin Stories</a>
+            <a href="sustainability.html" class="font-body-md text-body-md text-on-surface/85 hover:text-tertiary transition-colors duration-300">Sustainability</a>
+        </nav>
+        
+        <!-- Header Actions flex group -->
+        <div class="flex items-center gap-4">
+            <div class="auth-header-container flex items-center h-full">
+                <!-- Will load dynamically via auth.js -->
+                <div class="animate-pulse bg-surface-container-highest h-8 w-20 rounded"></div>
+            </div>
+            <a href="index.html#collection" class="hidden lg:block bg-tertiary text-on-tertiary px-6 py-2 rounded font-label-caps text-label-caps hover:bg-[#D4AF37] transition-all duration-300 border border-transparent hover:border-white/20">
+                Browse Beans
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 flex flex-col justify-center pt-32 pb-20 px-margin-mobile max-w-container-max mx-auto w-full">
+        
+        <!-- LOADING CONTAINER -->
+        <div id="vault-loader" class="flex flex-col items-center justify-center py-20 w-full">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-tertiary border-t-transparent mb-4 shadow-[0_0_15px_rgba(233,195,73,0.2)]"></div>
+            <span class="font-label-caps text-label-caps text-tertiary tracking-widest animate-pulse">Contacting Vault Vault...</span>
+        </div>
+
+        <!-- AUTH GATEKEEPER CONTAINER (Hidden by default) -->
+        <div id="vault-auth-gate" class="hidden w-full max-w-md mx-auto relative z-10">
+            <div class="glass-panel gold-border w-full rounded-xl p-8 relative shadow-2xl flex flex-col bg-surface-container-low/40 backdrop-blur-2xl">
+                <!-- Header title -->
+                <div class="font-label-caps text-label-caps text-tertiary mb-2 tracking-[0.2em] text-center">NESCAFÉ GUILD</div>
+                <h3 id="auth-gate-title" class="font-headline-sm text-2xl text-on-background mb-6 text-center">Sign In to Your Cellar</h3>
+                
+                <!-- Tab Headers -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <button type="button" id="tab-login-btn" class="border border-tertiary text-tertiary py-2.5 rounded text-center text-xs font-bold uppercase transition-all focus:outline-none">
+                        Sign In
+                    </button>
+                    <button type="button" id="tab-register-btn" class="border border-outline-variant/30 text-on-surface-variant py-2.5 rounded text-center text-xs font-bold uppercase transition-all focus:outline-none">
+                        Register
+                    </button>
+                </div>
+
+                <!-- Sign In Form (tied to auth.js by sharing the IDs) -->
+                <form id="auth-form-login" class="space-y-5">
+                    <div>
+                        <label for="log-email" class="block font-label-caps text-xs text-on-surface-variant mb-2 tracking-wider">EMAIL ADDRESS</label>
+                        <input type="email" id="log-email" required class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded p-3 text-on-background placeholder:text-on-surface-variant/40 focus:border-tertiary focus:ring-1 focus:ring-tertiary focus:outline-none transition-colors" placeholder="e.g. sid@example.com">
+                    </div>
+                    <div>
+                        <label for="log-password" class="block font-label-caps text-xs text-on-surface-variant mb-2 tracking-wider">PASSWORD</label>
+                        <input type="password" id="log-password" required class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded p-3 text-on-background placeholder:text-on-surface-variant/40 focus:border-tertiary focus:ring-1 focus:ring-tertiary focus:outline-none transition-colors" placeholder="••••••••">
+                    </div>
+                    
+                    <div id="log-error" class="hidden text-center p-3 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs">
+                    </div>
+
+                    <button type="submit" class="w-full bg-tertiary text-on-tertiary py-3.5 rounded font-label-caps tracking-widest hover:bg-[#D4AF37] transition-colors font-bold uppercase focus:outline-none">
+                        Access Cellar
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="auth-form-register" class="space-y-5 hidden">
+                    <div>
+                        <label for="reg-name" class="block font-label-caps text-xs text-on-surface-variant mb-2 tracking-wider">FULL NAME</label>
+                        <input type="text" id="reg-name" required class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded p-3 text-on-background placeholder:text-on-surface-variant/40 focus:border-tertiary focus:ring-1 focus:ring-tertiary focus:outline-none transition-colors" placeholder="e.g. Siddhant Sharma">
+                    </div>
+                    <div>
+                        <label for="reg-email" class="block font-label-caps text-xs text-on-surface-variant mb-2 tracking-wider">EMAIL ADDRESS</label>
+                        <input type="email" id="reg-email" required class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded p-3 text-on-background placeholder:text-on-surface-variant/40 focus:border-tertiary focus:ring-1 focus:ring-tertiary focus:outline-none transition-colors" placeholder="e.g. sid@example.com">
+                    </div>
+                    <div>
+                        <label for="reg-password" class="block font-label-caps text-xs text-on-surface-variant mb-2 tracking-wider">SECURE PASSWORD</label>
+                        <input type="password" id="reg-password" required minlength="6" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded p-3 text-on-background placeholder:text-on-surface-variant/40 focus:border-tertiary focus:ring-1 focus:ring-tertiary focus:outline-none transition-colors" placeholder="Min. 6 characters">
+                    </div>
+                    
+                    <div id="reg-error" class="hidden text-center p-3 border border-error/20 rounded bg-error-container/20 text-on-error-container text-xs">
+                    </div>
+
+                    <button type="submit" class="w-full bg-tertiary text-on-tertiary py-3.5 rounded font-label-caps tracking-widest hover:bg-[#D4AF37] transition-colors font-bold uppercase focus:outline-none">
+                        Enroll in Guild
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- AUTHENTICATED DASHBOARD (Hidden by default) -->
+        <div id="vault-dashboard" class="hidden w-full space-y-8 animate-fade-in">
+            <!-- Dynamic Welcome Banner -->
+            <div class="glass-panel gold-border p-8 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-surface-container-low/40 backdrop-blur-2xl relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-[#C68642]/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div>
+                    <span class="font-label-caps text-xs text-tertiary tracking-widest uppercase">CONNOISSEUR STATUS: ACTIVE</span>
+                    <h2 class="font-headline-sm text-3xl text-on-background font-bold tracking-tight mt-1" id="dash-welcome-title">
+                        Welcome to your Cellar, Connoisseur
+                    </h2>
+                    <p class="font-body-md text-sm text-on-surface-variant/80 mt-1">
+                        Securely manage your single-origin beans allocations and roasting cellar logs.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="window.supabaseClient.auth.signOut()" class="border border-outline-variant/40 hover:border-error hover:text-error text-on-surface-variant px-5 py-2.5 rounded font-label-caps text-xs tracking-wider transition-colors uppercase font-bold">
+                        Disconnect Vault
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile and Allocations Columns -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left: Profile and Vault Details -->
+                <div class="space-y-6 lg:col-span-1">
+                    
+                    <!-- Profile Info Card -->
+                    <div class="glass-panel gold-border p-6 rounded-xl bg-surface-container-low/40 backdrop-blur-2xl flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-tertiary/10 text-tertiary border border-tertiary flex items-center justify-center font-headline-sm text-3xl font-bold uppercase select-none mb-4 shadow-[0_0_15px_rgba(233,195,73,0.15)]" id="dash-avatar">
+                            C
+                        </div>
+                        
+                        <!-- Name & Interactive Update Form -->
+                        <div class="w-full mb-1">
+                            <div id="dash-name-display-container" class="flex items-center justify-center gap-2 group">
+                                <h3 class="font-headline-sm text-xl text-on-background font-semibold" id="dash-full-name">Connoisseur</h3>
+                                <button onclick="toggleNameEdit(true)" class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-tertiary transition-all" title="Edit Name">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </button>
+                            </div>
+                            <!-- Edit name inputs -->
+                            <div id="dash-name-edit-container" class="hidden flex items-center gap-2 max-w-xs mx-auto">
+                                <input type="text" id="dash-name-input" class="bg-surface-container-lowest border border-outline-variant/40 rounded px-3 py-1.5 text-sm text-on-background focus:border-tertiary focus:outline-none w-full" placeholder="Full name">
+                                <button onclick="saveProfileName()" class="bg-emerald-600 hover:bg-emerald-500 text-white rounded p-1.5 flex items-center justify-center transition-colors" title="Save name">
+                                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                                </button>
+                                <button onclick="toggleNameEdit(false)" class="bg-surface-container-highest hover:bg-outline-variant text-on-surface-variant rounded p-1.5 flex items-center justify-center transition-colors" title="Cancel edit">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <p class="font-body-md text-xs text-on-surface-variant/60 truncate w-full mb-6" id="dash-email">email@example.com</p>
+                        
+                        <!-- Vault Details List -->
+                        <div class="w-full border-t border-outline-variant/10 pt-4 space-y-3 text-left font-body-md text-xs text-on-surface-variant">
+                            <div class="flex justify-between">
+                                <span>GUILD TIER</span>
+                                <span class="text-tertiary font-bold tracking-widest uppercase">GOLD CONNOISSEUR</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>MEMBER SINCE</span>
+                                <span class="text-on-background font-semibold" id="dash-member-since">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>CELLAR STATUS</span>
+                                <span class="text-emerald-400 font-semibold flex items-center gap-1">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    ONLINE SECURE
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Setup/Interactive Info Drawer Option -->
+                    <div class="glass-panel p-6 rounded-xl bg-surface-container-low/40 backdrop-blur-2xl">
+                        <h4 class="font-headline-sm text-base text-on-background font-semibold mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-tertiary">workspace_premium</span>
+                            Connoisseur Perks
+                        </h4>
+                        <p class="font-body-md text-xs text-on-surface-variant/80 leading-relaxed mb-4">
+                            Your Nescafe Guild status guarantees VIP priority roasting times and access to our high-altitude single-origin bean limited launches.
+                        </p>
+                        <a href="index.html# alchemy" class="text-xs font-label-caps text-tertiary hover:underline uppercase flex items-center gap-1">
+                            Explore Coffee Alchemy <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: Allocations Cellar -->
+                <div class="space-y-6 lg:col-span-2">
+                    <div class="glass-panel gold-border p-6 rounded-xl bg-surface-container-low/40 backdrop-blur-2xl flex flex-col min-h-[400px]">
+                        <div class="flex justify-between items-center mb-6 border-b border-outline-variant/10 pb-4">
+                            <div>
+                                <h3 class="font-headline-sm text-xl text-on-background font-semibold">Premium Cellar Allocations</h3>
+                                <p class="text-[11px] font-body-md text-on-surface-variant/60">
+                                    Historical and pending roasting schedules secured for your account.
+                                </p>
+                            </div>
+                            <span class="bg-primary-container/60 text-tertiary border border-tertiary/20 text-xs px-3 py-1 rounded-full font-bold uppercase" id="dash-allocations-count">
+                                0 Allocations
+                            </span>
+                        </div>
+
+                        <!-- Allocations Grid/List -->
+                        <div id="dash-reservations-list" class="space-y-4 flex-1">
+                            <!-- Items loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary font-body-md text-body-md w-full py-12 border-t border-outline-variant/20 relative z-10">
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter">
+            <div class="font-headline-sm text-headline-sm text-tertiary mb-6 md:mb-0">
+                NESCAFÉ ROAST
+            </div>
+            <nav class="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
+                <a class="text-on-surface-variant hover:text-on-surface hover:text-tertiary transition-colors duration-300" href="privacy.html">Privacy Policy</a>
+                <a class="text-on-surface-variant hover:text-on-surface hover:text-tertiary transition-colors duration-300" href="sustainability.html">Sustainability</a>
+                <a class="text-on-surface-variant hover:text-on-surface hover:text-tertiary transition-colors duration-300" href="origin-stories.html">Origin Stories</a>
+                <a class="text-on-surface-variant hover:text-on-surface hover:text-tertiary transition-colors duration-300" href="terms.html">Terms</a>
+            </nav>
+            <div class="text-on-surface-variant text-sm">
+                © 2026 Nescafe Roast. The Art of the Pour.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase Client & Authentication Controller -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <!-- Lenis Smooth Scroll JS -->
+    <script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+    <script>
+        // Smooth scrolling init
+        document.addEventListener('DOMContentLoaded', () => {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+            });
+            function tick(time) {
+                lenis.raf(time);
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        });
+
+        // Tab switcher inside Gatekeeper Auth Form
+        const tabLoginBtn = document.getElementById('tab-login-btn');
+        const tabRegisterBtn = document.getElementById('tab-register-btn');
+        const formLogin = document.getElementById('auth-form-login');
+        const formRegister = document.getElementById('auth-form-register');
+        const authTitle = document.getElementById('auth-gate-title');
+
+        tabLoginBtn?.addEventListener('click', () => {
+            tabLoginBtn.classList.add('border-tertiary', 'text-tertiary');
+            tabLoginBtn.classList.remove('border-outline-variant/30', 'text-on-surface-variant');
+            tabRegisterBtn.classList.add('border-outline-variant/30', 'text-on-surface-variant');
+            tabRegisterBtn.classList.remove('border-tertiary', 'text-tertiary');
+            formLogin.classList.remove('hidden');
+            formRegister.classList.add('hidden');
+            authTitle.textContent = "Sign In to Your Cellar";
+        });
+
+        tabRegisterBtn?.addEventListener('click', () => {
+            tabRegisterBtn.classList.add('border-tertiary', 'text-tertiary');
+            tabRegisterBtn.classList.remove('border-outline-variant/30', 'text-on-surface-variant');
+            tabLoginBtn.classList.add('border-outline-variant/30', 'text-on-surface-variant');
+            tabLoginBtn.classList.remove('border-tertiary', 'text-tertiary');
+            formRegister.classList.remove('hidden');
+            formLogin.classList.add('hidden');
+            authTitle.textContent = "Join the Nescafe Guild";
+        });
+
+        // Interactive profile dashboard elements
+        let currentUser = null;
+        let userProfile = null;
+
+        function toggleNameEdit(isEdit) {
+            const displayCont = document.getElementById('dash-name-display-container');
+            const editCont = document.getElementById('dash-name-edit-container');
+            const nameInput = document.getElementById('dash-name-input');
+            const nameText = document.getElementById('dash-full-name');
+
+            if (isEdit) {
+                displayCont.classList.add('hidden');
+                editCont.classList.remove('hidden');
+                nameInput.value = nameText.textContent;
+                nameInput.focus();
+            } else {
+                displayCont.classList.remove('hidden');
+                editCont.classList.add('hidden');
+            }
+        }
+
+        async function saveProfileName() {
+            const nameInput = document.getElementById('dash-name-input');
+            const newName = nameInput.value.trim();
+            if (!newName) return;
+
+            const saveBtn = document.querySelector('#dash-name-edit-container button');
+            saveBtn.disabled = true;
+
+            const supabase = window.supabaseClient;
+            if (supabase && currentUser) {
+                try {
+                    // Update Supabase profile table
+                    const { error } = await supabase
+                        .from('profiles')
+                        .update({ full_name: newName })
+                        .eq('id', currentUser.id);
+
+                    if (error) throw error;
+
+                    // Update UI text locally
+                    document.getElementById('dash-full-name').textContent = newName;
+                    document.getElementById('dash-avatar').textContent = newName.charAt(0);
+                    
+                    // Reload welcome header & header names
+                    document.getElementById('dash-welcome-title').textContent = `Welcome to your Cellar, ${newName.split(' ')[0]}`;
+                    
+                    // Force refresh headers on current page
+                    if (window.initializeAuthSystem) {
+                        // Triggers internal profile state changes and update headers
+                        location.reload();
+                    } else {
+                        toggleNameEdit(false);
+                    }
+                } catch (err) {
+                    console.error("Name update error:", err);
+                    alert("Failed to update profile name: " + err.message);
+                } finally {
+                    saveBtn.disabled = false;
+                }
+            }
+        }
+
+        // SUPABASE REALTIME SESSION HANDLER FOR PROFILE VIEW
+        function initializeProfileEngine() {
+            const supabase = window.supabaseClient;
+            const loader = document.getElementById('vault-loader');
+            const gate = document.getElementById('vault-auth-gate');
+            const dash = document.getElementById('vault-dashboard');
+
+            if (!supabase) {
+                loader.innerHTML = `
+                    <div class="text-center p-6 border border-error/20 rounded bg-error-container/20 text-on-error-container max-w-md mx-auto">
+                        <span class="material-symbols-outlined text-4xl mb-3">database_off</span>
+                        <p class="font-headline-sm text-base mb-1">Vault Connection Offline</p>
+                        <p class="font-body-md text-xs opacity-80 leading-relaxed">
+                            Supabase integration needs to be initialized. Please configure API credentials in the vault sliding drawer on the <a href="index.html" class="underline text-tertiary">home page</a>.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sync auth state realtime
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (session) {
+                    currentUser = session.user;
+                    loader.classList.remove('hidden');
+                    gate.classList.add('hidden');
+                    dash.classList.add('hidden');
+                    
+                    await loadUserProfile();
+                } else {
+                    currentUser = null;
+                    userProfile = null;
+                    loader.classList.add('hidden');
+                    gate.classList.remove('hidden');
+                    dash.classList.add('hidden');
+                }
+            });
+
+            // Initial check
+            supabase.auth.getSession().then(async ({ data: { session } }) => {
+                if (session) {
+                    currentUser = session.user;
+                    await loadUserProfile();
+                } else {
+                    loader.classList.add('hidden');
+                    gate.classList.remove('hidden');
+                    dash.classList.add('hidden');
+                }
+            });
+
+            async function loadUserProfile() {
+                if (!currentUser) return;
+
+                try {
+                    // 1. Load profiles details
+                    const { data: profile, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    if (profile) {
+                        userProfile = profile;
+                    }
+
+                    // 2. Render details
+                    const userName = userProfile?.full_name || currentUser?.user_metadata?.full_name || 'Guild Connoisseur';
+                    const userEmail = currentUser.email || 'email@example.com';
+                    
+                    document.getElementById('dash-full-name').textContent = userName;
+                    document.getElementById('dash-avatar').textContent = userName.charAt(0);
+                    document.getElementById('dash-email').textContent = userEmail;
+                    document.getElementById('dash-welcome-title').textContent = `Welcome to your Cellar, ${userName.split(' ')[0]}`;
+                    
+                    // Parse date
+                    const createdDate = new Date(currentUser.created_at).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    document.getElementById('dash-member-since').textContent = createdDate;
+
+                    // 3. Load allocations
+                    await loadAllocationsHistory();
+
+                    // Show dashboard
+                    loader.classList.add('hidden');
+                    dash.classList.remove('hidden');
+                } catch (err) {
+                    console.error("Dashboard fetch error:", err);
+                    loader.innerHTML = `
+                        <div class="text-center p-6 border border-error/20 rounded bg-error-container/20 text-on-error-container max-w-sm mx-auto">
+                            <p class="font-headline-sm text-base mb-1">Failed to Open Vault</p>
+                            <p class="font-body-md text-xs opacity-80 mb-4">${err.message}</p>
+                            <button onclick="location.reload()" class="border border-[#fff]/20 text-white px-4 py-2 text-xs font-label-caps uppercase rounded">Retry Connection</button>
+                        </div>
+                    `;
+                }
+            }
+
+            async function loadAllocationsHistory() {
+                const listEl = document.getElementById('dash-reservations-list');
+                const countEl = document.getElementById('dash-allocations-count');
+                if (!listEl) return;
+
+                const { data: reservations, error } = await supabase
+                    .from('reservations')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    listEl.innerHTML = `
+                        <div class="text-center py-6 text-on-surface-variant/50 text-sm">
+                            ⚠️ Unable to load reservations list.
+                        </div>
+                    `;
+                    return;
+                }
+
+                if (!reservations || reservations.length === 0) {
+                    countEl.textContent = "0 Allocations";
+                    listEl.innerHTML = `
+                        <div class="text-center py-16 px-6 border border-outline-variant/10 rounded-xl bg-surface-container-lowest/30 flex flex-col items-center">
+                            <span class="material-symbols-outlined text-4xl text-on-surface-variant/20 mb-3">explore</span>
+                            <h5 class="font-headline-sm text-lg text-on-background font-semibold">Roaster Cellar is Empty</h5>
+                            <p class="font-body-md text-xs text-on-surface-variant/70 max-w-xs mt-1 mb-6 leading-relaxed">
+                                Secure your limited allocation of our high-altitude single-origin beans today.
+                            </p>
+                            <a href="index.html#collection" class="border border-tertiary text-tertiary px-6 py-2.5 rounded font-label-caps text-xs tracking-wider uppercase hover:bg-tertiary hover:text-on-tertiary transition-all duration-300">
+                                Reserve Beans
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                countEl.textContent = `${reservations.length} ${reservations.length === 1 ? 'Allocation' : 'Allocations'}`;
+
+                let html = '';
+                reservations.forEach(res => {
+                    const formattedDate = new Date(res.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    const blendLabel = res.blend.toUpperCase();
+                    
+                    // Badges
+                    let statusBadge = '';
+                    if (res.status === 'confirmed') {
+                        statusBadge = '<span class="bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Confirmed</span>';
+                    } else if (res.status === 'pending') {
+                        statusBadge = '<span class="bg-amber-950/80 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1 animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Roasting Schedule Pending</span>';
+                    } else {
+                        statusBadge = `<span class="bg-surface-container-highest text-on-surface-variant border border-outline-variant/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase">${res.status}</span>`;
+                    }
+
+                    // Define blend icons
+                    let blendIcon = 'coffee_maker';
+                    if (res.blend.toLowerCase().includes('midnight')) blendIcon = 'local_cafe';
+                    if (res.blend.toLowerCase().includes('gold')) blendIcon = 'workspace_premium';
+
+                    html += `
+                        <div class="glass-panel gold-border p-5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container/30 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-surface-container-lowest/60 border border-outline-variant/20 flex items-center justify-center text-tertiary">
+                                    <span class="material-symbols-outlined text-2xl">${blendIcon}</span>
+                                </div>
+                                <div>
+                                    <div class="font-headline-sm text-base text-on-background font-semibold">${blendLabel}</div>
+                                    <div class="text-[11px] text-on-surface-variant/60 font-body-md mt-0.5">Roaster Allocation: Checked in on ${formattedDate}</div>
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-col items-start sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-outline-variant/15 gap-2">
+                                ${statusBadge}
+                                <div class="text-xs font-body-md text-on-surface-variant mt-1">
+                                    Qty: <strong class="text-on-background">${res.quantity} ${res.quantity === 1 ? 'Bag' : 'Bags'}</strong> 
+                                    <span class="mx-1 text-outline-variant">|</span> 
+                                    Total: <strong class="text-tertiary font-bold font-mono">$${Number(res.total_price).toFixed(2)}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                listEl.innerHTML = html;
+            }
+        }
+
+        // Initialize Realtime Sync Hook
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeProfileEngine);
+        } else {
+            initializeProfileEngine();
+        }
+    </script>
+</body>
+</html>

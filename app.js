@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Close reservation modal and redirect to login page
                         closeReservationModal();
                         setTimeout(() => {
-                            window.location.href = 'login.html';
+                            window.location.href = 'profile.html';
                         }, 350);
                         return;
                     }
