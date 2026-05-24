@@ -39,8 +39,17 @@ function initializeAuthSystem() {
             console.log(`☕ Auth State Change: ${event}`);
             if (session) {
                 currentUser = session.user;
-                // Fetch profile metadata
-                await fetchProfileAndReservations();
+                // Optimistic UI update - instantly set header to authenticated status
+                updateHeaderAndDrawerState(true);
+                
+                // Redirect authenticated users trying to access login.html to profile.html
+                const path = window.location.pathname.toLowerCase();
+                if (path.endsWith('login.html') || path.endsWith('login')) {
+                    window.location.href = 'profile.html';
+                }
+                
+                // Fetch details in background
+                fetchProfileAndReservations();
             } else {
                 currentUser = null;
                 userProfile = null;
@@ -60,7 +69,16 @@ function initializeAuthSystem() {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session) {
                 currentUser = session.user;
-                await fetchProfileAndReservations();
+                // Optimistic UI update - instantly set header to authenticated status
+                updateHeaderAndDrawerState(true);
+                
+                // Redirect authenticated users trying to access login.html to profile.html
+                const path = window.location.pathname.toLowerCase();
+                if (path.endsWith('login.html') || path.endsWith('login')) {
+                    window.location.href = 'profile.html';
+                }
+                
+                fetchProfileAndReservations();
             } else {
                 updateHeaderAndDrawerState(false);
             }
