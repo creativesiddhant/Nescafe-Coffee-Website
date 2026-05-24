@@ -452,6 +452,34 @@
             if (!currentUser || isProfileLoading || !supabase) return;
             isProfileLoading = true;
 
+            // Sync local guest reservations to Supabase
+            try {
+                const guestRes = JSON.parse(localStorage.getItem('guest_reservations') || '[]');
+                if (guestRes.length > 0) {
+                    console.log("☕ Profile sync: Securing guest reservations to user database cellar...", guestRes);
+                    const rowsToInsert = guestRes.map(res => ({
+                        user_id: currentUser.id,
+                        blend: res.blend,
+                        quantity: parseInt(res.quantity),
+                        total_price: parseFloat(res.total_price),
+                        status: 'pending'
+                    }));
+                    
+                    const { error: syncError } = await supabase
+                        .from('reservations')
+                        .insert(rowsToInsert);
+                        
+                    if (!syncError) {
+                        console.log("☕ Profile sync: Successfully synced guest reservations!");
+                        localStorage.removeItem('guest_reservations');
+                    } else {
+                        console.warn("☕ Profile sync: Failed to sync guest reservations:", syncError);
+                    }
+                }
+            } catch (syncErr) {
+                console.error("Guest reservations profile sync exception:", syncErr);
+            }
+
             const loader = document.getElementById('vault-loader');
             const gate   = document.getElementById('vault-auth-gate');
             const dash   = document.getElementById('vault-dashboard');

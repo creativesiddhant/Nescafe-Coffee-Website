@@ -97,6 +97,34 @@ function initializeAuthSystem() {
     async function fetchProfileAndReservations() {
         if (!supabase || !currentUser) return;
 
+        // Sync local guest reservations to Supabase
+        try {
+            const guestRes = JSON.parse(localStorage.getItem('guest_reservations') || '[]');
+            if (guestRes.length > 0) {
+                console.log("☕ Syncing guest reservations to logged-in user cellar...", guestRes);
+                const rowsToInsert = guestRes.map(res => ({
+                    user_id: currentUser.id,
+                    blend: res.blend,
+                    quantity: parseInt(res.quantity),
+                    total_price: parseFloat(res.total_price),
+                    status: 'pending'
+                }));
+                
+                const { error: syncError } = await supabase
+                    .from('reservations')
+                    .insert(rowsToInsert);
+                    
+                if (!syncError) {
+                    console.log("☕ Successfully synced guest reservations!");
+                    localStorage.removeItem('guest_reservations');
+                } else {
+                    console.warn("☕ Failed to sync guest reservations:", syncError);
+                }
+            }
+        } catch (syncErr) {
+            console.error("Guest reservations sync exception:", syncErr);
+        }
+
         try {
             // Fetch profile
             const { data: profile, error: profileErr } = await supabase
@@ -231,6 +259,9 @@ function initializeAuthSystem() {
             // If logged in, reload reservations list
             if (currentUser) {
                 refreshReservationsList();
+            } else {
+                // For guest users, refresh the drawer to display any guest reservations in localStorage
+                updateHeaderAndDrawerState(false);
             }
             window.lenis?.stop(); // lock scroll
         }
@@ -391,10 +422,63 @@ function initializeAuthSystem() {
             }
             if (drawerReservationsSection) drawerReservationsSection.classList.remove('hidden');
             if (drawerAuthPrompt) drawerAuthPrompt.classList.add('hidden');
+            const logoutBtn = document.getElementById('drawer-logout-btn');
+            if (logoutBtn) logoutBtn.classList.remove('hidden');
         } else {
             if (drawerProfileSection) drawerProfileSection.classList.add('hidden');
-            if (drawerReservationsSection) drawerReservationsSection.classList.add('hidden');
-            if (drawerAuthPrompt) drawerAuthPrompt.classList.remove('hidden');
+            
+            // Check and display guest reservations
+            const guestReservations = JSON.parse(localStorage.getItem('guest_reservations') || '[]');
+            if (guestReservations.length > 0) {
+                if (drawerReservationsSection) drawerReservationsSection.classList.remove('hidden');
+                
+                const reservationsListContainer = document.getElementById('drawer-reservations-list');
+                if (reservationsListContainer) {
+                    let htmlContent = '<div class="space-y-4 max-h-[35vh] overflow-y-auto pr-1">';
+                    guestReservations.forEach(res => {
+                        const formattedDate = new Date(res.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                        const blendLabel = res.blend.toUpperCase();
+                        
+                        htmlContent += `
+                            <div class="glass-panel gold-border p-4 rounded-xl flex flex-col gap-2 hover:bg-surface-container/50 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="font-headline-sm text-sm text-on-background font-semibold">${blendLabel}</div>
+                                        <div class="text-[11px] text-on-surface-variant/60 font-body-md mt-0.5">${formattedDate} (Guest)</div>
+                                    </div>
+                                    <span class="bg-amber-950/80 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Local Guest</span>
+                                </div>
+                                <div class="flex justify-between items-center border-t border-outline-variant/10 pt-2 mt-1 text-xs font-body-md">
+                                    <span class="text-on-surface-variant">Qty: <strong class="text-on-background font-semibold">${res.quantity} ${res.quantity === 1 ? 'Bag' : 'Bags'}</strong></span>
+                                    <span class="text-tertiary font-bold">$${Number(res.total_price).toFixed(2)}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    htmlContent += '</div>';
+                    reservationsListContainer.innerHTML = htmlContent;
+                }
+
+                const logoutBtn = document.getElementById('drawer-logout-btn');
+                if (logoutBtn) logoutBtn.classList.add('hidden');
+
+                if (drawerAuthPrompt) {
+                    drawerAuthPrompt.classList.remove('py-12');
+                    drawerAuthPrompt.classList.add('py-6', 'border-t', 'border-outline-variant/10', 'mt-4');
+                    drawerAuthPrompt.classList.remove('hidden');
+                }
+            } else {
+                if (drawerReservationsSection) drawerReservationsSection.classList.add('hidden');
+                if (drawerAuthPrompt) {
+                    drawerAuthPrompt.classList.remove('py-6', 'border-t', 'border-outline-variant/10', 'mt-4');
+                    drawerAuthPrompt.classList.add('py-12');
+                    drawerAuthPrompt.classList.remove('hidden');
+                }
+            }
         }
     }
 

@@ -245,16 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const authState = window.checkUserAuth ? window.checkUserAuth() : { isAuthenticated: false };
                 const isDbConfigured = window.supabaseConfig ? window.supabaseConfig.isConfigured : false;
 
-                if (isDbConfigured) {
-                    if (!authState.isAuthenticated) {
-                        // Close reservation modal and redirect to login page
-                        closeReservationModal();
-                        setTimeout(() => {
-                            window.location.href = 'profile.html';
-                        }, 350);
-                        return;
-                    }
-
+                if (isDbConfigured && authState.isAuthenticated) {
                     // Show spinner/progress on reservation submit button
                     const submitBtn = document.querySelector('#reservation-form button[type="submit"]');
                     const originalText = submitBtn ? submitBtn.textContent : "Confirm Reservation";
@@ -287,7 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert(`Reservation failed: ${result.error}`);
                     }
                 } else {
-                    // Fallback for unconfigured database (pure offline mock mode)
+                    // Process as a guest / fallback reservation (no redirect to profile page!)
+                    const submitBtn = document.querySelector('#reservation-form button[type="submit"]');
+                    const originalText = submitBtn ? submitBtn.textContent : "Confirm Reservation";
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = "Securing guest batch...";
+                    }
+
+                    // Premium, organic delay to simulate securing allocation
+                    await new Promise(resolve => setTimeout(resolve, 800));
+
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+
                     const randomId = `#AR-${Math.floor(10000 + Math.random() * 90000)}`;
                     if (confirmId) confirmId.textContent = randomId;
                     if (confirmBlend) confirmBlend.textContent = blendNames[selectedBlend];
@@ -296,7 +302,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (modalStageForm) modalStageForm.classList.add('hidden');
                     if (modalStageSuccess) modalStageSuccess.classList.remove('hidden');
-                    console.log("Offline Fallback: Database connection not initialized. Created reservation locally.");
+
+                    if (isDbConfigured) {
+                        console.log("Guest checkout completed. Reservation created locally.");
+                    } else {
+                        console.log("Offline Fallback: Database connection not initialized. Created reservation locally.");
+                    }
+
+                    // Save guest reservation in localStorage for client-side persistence
+                    const guestRes = {
+                        id: randomId,
+                        blend: selectedBlend,
+                        quantity: quantity,
+                        total_price: totalPrice,
+                        created_at: new Date().toISOString(),
+                        name: nameInput ? nameInput.value : '',
+                        email: emailInput ? emailInput.value : ''
+                    };
+                    const existingGuestRes = JSON.parse(localStorage.getItem('guest_reservations') || '[]');
+                    existingGuestRes.push(guestRes);
+                    localStorage.setItem('guest_reservations', JSON.stringify(existingGuestRes));
                 }
             } catch (err) {
                 console.error("Reservation submit exception:", err);
