@@ -600,7 +600,7 @@ function initializeAuthSystem() {
 
             try {
                 console.log("☕ Calling supabase.auth.signInWithPassword...");
-                const { error } = await supabase.auth.signInWithPassword({
+                const { data: signInData, error } = await supabase.auth.signInWithPassword({
                     email,
                     password
                 });
@@ -610,13 +610,40 @@ function initializeAuthSystem() {
                 
                 const container = e.target.closest('.glass-panel') || document.body;
                 console.log("☕ Sign In success! Displaying success checkmark...");
-                
-                showGreenSuccessCheck(
-                    container,
-                    "Access Granted",
-                    "Sign in successful. Unlocking your connoisseur vault...",
-                    "profile.html"
-                );
+
+                // Check if we are already on profile.html — if so, don't redirect (avoid window.name wipe)
+                const currentPath = window.location.pathname.toLowerCase();
+                const isOnProfilePage = currentPath.endsWith('profile.html') || currentPath.endsWith('profile');
+
+                if (isOnProfilePage) {
+                    // Show success state, then reveal the dashboard directly without a page reload
+                    showGreenSuccessCheck(
+                        container,
+                        "Access Granted",
+                        "Sign in successful. Unlocking your connoisseur vault...",
+                        null  // no redirect — we'll trigger the dashboard ourselves
+                    );
+                    // Give the success animation a moment, then trigger the profile dashboard
+                    setTimeout(() => {
+                        if (typeof initializeProfileEngine === 'function') {
+                            initializeProfileEngine();
+                        } else {
+                            // Fallback: fire the auth state change manually by refreshing session
+                            supabase.auth.getSession().then(({ data: { session } }) => {
+                                if (session && window._profileAuthCallback) {
+                                    window._profileAuthCallback('SIGNED_IN', session);
+                                }
+                            });
+                        }
+                    }, 1200);
+                } else {
+                    showGreenSuccessCheck(
+                        container,
+                        "Access Granted",
+                        "Sign in successful. Unlocking your connoisseur vault...",
+                        "profile.html"
+                    );
+                }
             } catch (err) {
                 console.error("☕ Catch block caught login error:", err);
                 if (errEl) {
