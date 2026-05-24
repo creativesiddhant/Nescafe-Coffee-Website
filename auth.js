@@ -453,7 +453,7 @@ function initializeAuthSystem() {
                                 type: 'signup',
                                 email: currentUser.email,
                                 options: {
-                                    emailRedirectTo: window.location.origin + window.location.pathname
+                                    emailRedirectTo: window.location.origin + "/profile.html"
                                 }
                             });
                             if (error) throw error;
@@ -662,7 +662,7 @@ function initializeAuthSystem() {
                         data: {
                             full_name: fullName
                         },
-                        emailRedirectTo: window.location.origin + window.location.pathname
+                        emailRedirectTo: window.location.origin + "/profile.html"
                     }
                 });
                 console.log("☕ supabase.auth.signUp finished. Data:", data, "Error:", error);
