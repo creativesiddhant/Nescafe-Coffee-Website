@@ -46,10 +46,12 @@ function initializeAuthSystem() {
                 userProfile = null;
                 updateHeaderAndDrawerState(false);
                 
-                // Redirect to index.html if we are on the profile page
-                const path = window.location.pathname.toLowerCase();
-                if (path.endsWith('profile.html') || path.endsWith('profile')) {
-                    window.location.href = 'index.html';
+                // Redirect to index.html if we explicitly signed out on the profile page
+                if (event === 'SIGNED_OUT') {
+                    const path = window.location.pathname.toLowerCase();
+                    if (path.endsWith('profile.html') || path.endsWith('profile')) {
+                        window.location.href = 'index.html';
+                    }
                 }
             }
         });
@@ -477,6 +479,8 @@ function initializeAuthSystem() {
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const origText = submitBtn.textContent;
             
+            console.log("☕ Sign Up Form Submitted:", email);
+
             const errEl = document.getElementById('reg-error');
             if (errEl) {
                 errEl.classList.add('hidden');
@@ -495,6 +499,7 @@ function initializeAuthSystem() {
             submitBtn.textContent = "Registering...";
 
             try {
+                console.log("☕ Calling supabase.auth.signUp...");
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
@@ -504,10 +509,12 @@ function initializeAuthSystem() {
                         }
                     }
                 });
+                console.log("☕ supabase.auth.signUp finished. Data:", data, "Error:", error);
 
                 if (error) throw error;
 
                 const container = e.target.closest('.glass-panel') || document.body;
+                console.log("☕ Registration success! Displaying success checkmark...");
 
                 // Check if email confirmation is required
                 if (data.user && data.session === null) {
@@ -526,7 +533,7 @@ function initializeAuthSystem() {
                     );
                 }
             } catch (err) {
-                console.error("Sign up error:", err);
+                console.error("☕ Catch block caught registration error:", err);
                 if (errEl) {
                     let errMsg = err.message || "An unexpected error occurred.";
                     if (errMsg.toLowerCase().includes("failed to fetch")) {
@@ -549,6 +556,8 @@ function initializeAuthSystem() {
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const origText = submitBtn.textContent;
             
+            console.log("☕ Sign In Form Submitted:", email);
+
             const errEl = document.getElementById('log-error');
             if (errEl) {
                 errEl.classList.add('hidden');
@@ -567,14 +576,17 @@ function initializeAuthSystem() {
             submitBtn.textContent = "Verifying Credentials...";
 
             try {
+                console.log("☕ Calling supabase.auth.signInWithPassword...");
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
                     password
                 });
+                console.log("☕ supabase.auth.signInWithPassword finished. Error:", error);
 
                 if (error) throw error;
                 
                 const container = e.target.closest('.glass-panel') || document.body;
+                console.log("☕ Sign In success! Displaying success checkmark...");
                 
                 showGreenSuccessCheck(
                     container,
@@ -583,7 +595,7 @@ function initializeAuthSystem() {
                     "profile.html"
                 );
             } catch (err) {
-                console.error("Sign in error:", err);
+                console.error("☕ Catch block caught login error:", err);
                 if (errEl) {
                     let errMsg = err.message || "Invalid credentials.";
                     if (errMsg.toLowerCase().includes("email not confirmed")) {
