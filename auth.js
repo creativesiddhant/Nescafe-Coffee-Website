@@ -55,11 +55,13 @@ function initializeAuthSystem() {
                 userProfile = null;
                 updateHeaderAndDrawerState(false);
                 
-                // Redirect to index.html if we explicitly signed out on the profile page
+                // Redirect to index.html if we explicitly signed out on the profile page, else reload
                 if (event === 'SIGNED_OUT') {
                     const path = window.location.pathname.toLowerCase();
                     if (path.endsWith('profile.html') || path.endsWith('profile')) {
                         window.location.href = 'index.html';
+                    } else {
+                        location.reload();
                     }
                 }
             }

@@ -77,19 +77,48 @@ const globalSupabase = typeof window.supabase !== 'undefined' ? window.supabase 
 // 2. Initialize the Supabase Client if configured and CDN is loaded
 if (isConfigured && globalSupabase) {
     try {
-        // Safe check for custom session storage engine (supports memory fallback for file:// sandbox)
+        // Safe check for custom session storage engine (supports window.name persistence for file:// sandbox)
         let storageEngine = null;
         try {
             localStorage.setItem("sb_persistence_test", "1");
             localStorage.removeItem("sb_persistence_test");
             storageEngine = localStorage;
         } catch (storageError) {
-            console.log("ℹ️ Nescafe Roast: Local storage is sandboxed. Loading in-memory session vault.");
-            window.sb_memory_vault = window.sb_memory_vault || {};
+            console.log("ℹ️ Nescafe Roast: Local storage is sandboxed. Loading window.name session vault for cross-page persistence.");
+            
+            const getVault = () => {
+                try {
+                    // Try to parse the window.name as JSON
+                    return JSON.parse(window.name || '{}');
+                } catch {
+                    // If parsing fails, reset name and return empty
+                    return {};
+                }
+            };
+            
+            const setVault = (val) => {
+                try {
+                    window.name = JSON.stringify(val);
+                } catch (e) {
+                    console.error("Failed to write to window.name vault", e);
+                }
+            };
+
             storageEngine = {
-                getItem: (k) => window.sb_memory_vault[k] || null,
-                setItem: (k, v) => { window.sb_memory_vault[k] = v; },
-                removeItem: (k) => { delete window.sb_memory_vault[k]; }
+                getItem: (k) => {
+                    const vault = getVault();
+                    return vault[k] || null;
+                },
+                setItem: (k, v) => {
+                    const vault = getVault();
+                    vault[k] = v;
+                    setVault(vault);
+                },
+                removeItem: (k) => {
+                    const vault = getVault();
+                    delete vault[k];
+                    setVault(vault);
+                }
             };
         }
 
